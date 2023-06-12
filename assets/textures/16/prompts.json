@@ -1,0 +1,31 @@
+{"text": "Card texture: Patrick Rothfuss's Kingkiller Chronicle, lute and arcane symbols on weathered parchment, golden flourishes, epic fantasy, grainy, 8k, ArtStation winner. flourishes, dingbats, embellishments",
+    "cardTitles": [
+      {"title": "The Lute's Melody", "category": "objectsAndArtifacts", "color": "#8B4513", "font": "Garamond", "size": "20px"},
+      {"title": "Parchment of Prophecy", "category": "objectsAndArtifacts", "color": "#DAA520", "font": "Verdana", "size": "22px"},
+      {"title": "Arcane Etchings", "category": "naturalPhenomena", "color": "#483D8B", "font": "Times New Roman", "size": "20px"},
+      {"title": "Golden Illuminations", "category": "naturalPhenomena", "color": "#B8860B", "font": "Georgia", "size": "22px"},
+      {"title": "Time's Enigma", "category": "timeAndSeasons", "color": "#228B22", "font": "Arial", "size": "20px"},
+      {"title": "Eve of Epiphany", "category": "timeAndSeasons", "color": "#8B0000", "font": "Garamond", "size": "22px"},
+      {"title": "The Mystic's Path", "category": "journeysAndQuests", "color": "#006400", "font": "Calibri", "size": "20px"},
+      {"title": "Quest for the Lost Chord", "category": "journeysAndQuests", "color": "#A0522D", "font": "Verdana", "size": "22px"},
+      {"title": "The Bard's Dilemma", "category": "situationsAndDilemmas", "color": "#6B8E23", "font": "Arial", "size": "20px"},
+      {"title": "Riddle of the Ancient", "category": "situationsAndDilemmas", "color": "#B22222", "font": "Georgia", "size": "22px"},
+      {"title": "The Arcanist's Enclave", "category": "locationsAndLandmarks", "color": "#008B8B", "font": "Arial", "size": "20px"},
+      {"title": "City of Winds", "category": "locationsAndLandmarks", "color": "#696969", "font": "Times New Roman", "size": "22px"},
+      {"title": "Minstrel's Sorrow", "category": "emotionsAndFeelings", "color": "#8B4513", "font": "Garamond", "size": "20px"},
+      {"title": "Euphoria of Discovery", "category": "emotionsAndFeelings", "color": "#DAA520", "font": "Verdana", "size": "22px"},
+      {"title": "Edema Ruh's Legacy", "category": "culturalAndSocietal", "color": "#483D8B", "font": "Times New Roman", "size": "20px"},
+      {"title": "Traditions of the University", "category": "culturalAndSocietal", "color": "#B8860B", "font": "Georgia", "size": "22px"},
+      {"title": "The Shaper of Stories", "category": "charactersAndCreatures", "color": "#228B22", "font": "Arial", "size": "20px"},
+      {"title": "Chronicler's Pursuit", "category": "charactersAndCreatures", "color": "#8B0000", "font": "Garamond", "size": "22px"},
+      {"title": "Rainy Nights at Anker's", "category": "placeToSpendTheNight", "color": "#6A5ACD", "font": "Arial", "size": "22px"},
+      {"title": "Rest in the Waystone Inn", "category": "placeToSpendTheNight", "color": "#008080", "font": "Georgia", "size": "22px"},
+      {"title": "Crossing the Stone Bridge", "category": "geographicalFeature", "color": "#008B8B", "font": "Verdana", "size": "20px"},
+      {"title": "The Silent Roar of the Eld", "category": "geographicalFeature", "color": "#696969", "font": "Arial", "size": "22px"},
+      {"title": "Trekking through Tarbean", "category": "modeOfTransportation", "color": "#8B4513", "font": "Times New Roman", "size": "20px"},
+      {"title": "Ride with the Tinkers", "category": "modeOfTransportation", "color": "#DAA520", "font": "Verdana", "size": "22px"},
+      {"title": "Winter in the Underthing", "category": "weather", "color": "#483D8B", "font": "Arial", "size": "20px"},
+      {"title": "Summer Solstice at the University", "category": "weather", "color": "#B8860B", "font": "Georgia", "size": "22px"}
+    ]
+  }
+  

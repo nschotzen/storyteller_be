@@ -1,0 +1,33 @@
+{"text": "Card texture: Joe Abercrombie's First Law Trilogy, bloody sword against dark backdrop, grungy flourishes, grimdark, grainy, 8k, ArtStation winner.",
+    "cardTitles": [
+      {"title": "The Rusty Crown", "category": "locationsAndLandmarks", "color": "#8B0000", "font": "Arial", "size": "20px"},
+      {"title": "Black Stone Tower", "category": "locationsAndLandmarks", "color": "#2F4F4F", "font": "Calibri", "size": "22px"},
+      {"title": "Night of Bloodshed", "category": "eventsAndOccurrences", "color": "#808080", "font": "Cambria", "size": "20px"},
+      {"title": "Sacrifice at Dawn", "category": "eventsAndOccurrences", "color": "#00008B", "font": "Garamond", "size": "22px"},
+      {"title": "The Scorned Dagger", "category": "objectsAndArtifacts", "color": "#FF4500", "font": "Georgia", "size": "20px"},
+      {"title": "Tome of the Broken", "category": "objectsAndArtifacts", "color": "#FF8C00", "font": "Arial", "size": "22px"},
+      {"title": "Wraith of the Wastes", "category": "charactersAndCreatures", "color": "#2E8B57", "font": "Times New Roman", "size": "20px"},
+      {"title": "Hound of Shadows", "category": "charactersAndCreatures", "color": "#B22222", "font": "Verdana", "size": "22px"},
+      {"title": "Betrayed in the Wilderness", "category": "situationsAndDilemmas", "color": "#8B008B", "font": "Georgia", "size": "20px"},
+      {"title": "Pact of the Broken Sword", "category": "situationsAndDilemmas", "color": "#6A5ACD", "font": "Arial", "size": "22px"},
+      {"title": "Sorrow under the Iron Sky", "category": "emotionsAndFeelings", "color": "#800000", "font": "Arial", "size": "20px"},
+      {"title": "Courage in the Shadow", "category": "emotionsAndFeelings", "color": "#8B008B", "font": "Georgia", "size": "22px"},
+      {"title": "Harvest in the Shadowlands", "category": "timeAndSeasons", "color": "#800000", "font": "Georgia", "size": "20px"},
+      {"title": "Twilight at the Boundary", "category": "timeAndSeasons", "color": "#006400", "font": "Arial", "size": "22px"},
+      {"title": "The Raging Storm", "category": "naturalPhenomena", "color": "#8B0000", "font": "Arial", "size": "20px"},
+      {"title": "The Quiet Fog", "category": "naturalPhenomena", "color": "#2F4F4F", "font": "Calibri", "size": "22px"},
+      {"title": "The Iron Council", "category": "culturalAndSocietal", "color": "#8B0000", "font": "Arial", "size": "20px"},
+      {"title": "Festival of the Broken", "category": "culturalAndSocietal", "color": "#2F4F4F", "font": "Calibri", "size": "22px"},
+      {"title": "Journey into the Wastes", "category": "journeysAndQuests", "color": "#8B0000", "font": "Arial", "size": "20px"},
+      {"title": "The Path of the Broken Sword", "category": "journeysAndQuests", "color": "#2F4F4F", "font": "Calibri", "size": "22px"},
+      {"title": "Ice Hail at Dusk", "category": "weather", "color": "#8A2BE2", "font": "Garamond", "size": "20px"},
+      {"title": "Searing Sun of Noon", "category": "weather", "color": "#7FFF00", "font": "Georgia", "size": "22px"},
+      {"title": "Ox-cart in the Barren", "category": "modeOfTransportation", "color": "#DAA520", "font": "Calibri", "size": "20px"},
+      {"title": "Raft on the Serpent River", "category": "modeOfTransportation", "color": "#CD5C5C", "font": "Arial", "size": "22px"},
+      {"title": "Dusk at the Dusty Tavern", "category": "placeToSpendTheNight", "color": "#B8860B", "font": "Tahoma", "size": "20px"},
+      {"title": "Sleep in the Sorrow Hall", "category": "placeToSpendTheNight", "color": "#4682B4", "font": "Verdana", "size": "22px"},
+      {"title": "Valley of Vultures", "category": "geographicalFeature", "color": "#8B008B", "font": "Georgia", "size": "20px"},
+      {"title": "The Scarred Cliffs", "category": "geographicalFeature", "color": "#6A5ACD", "font": "Arial", "size": "22px"}
+    ]
+  }
+  

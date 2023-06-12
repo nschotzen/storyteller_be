@@ -1,0 +1,26 @@
+
+{
+    "text": "Card texture:Aztec stone, glyphs and carvings, pre-Columbian, weathered limestone, step pyramid, Mesoamerican civilizations, sun god.",
+    "cardTitles": [
+        {"title": "TempleOfSunstone", "category": "locationsAndLandmarks", "color": "#8B4513", "font": "Courier New", "size": "20px"},
+        {"title": "EdgeOfTheEmeraldJungle", "category": "locationsAndLandmarks", "color": "#A0522D", "font": "Arial", "size": "22px"},
+        {"title": "NightOfTheJaguar", "category": "eventsAndOccurrences", "color": "#D2691E", "font": "Verdana", "size": "24px"},
+        {"title": "Quetzalcoatl'sQuake", "category": "eventsAndOccurrences", "color": "#CD853F", "font": "Trebuchet MS", "size": "18px"},
+        {"title": "GlyphOfTheGoldenEagle", "category": "objectsAndArtifacts", "color": "#F4A460", "font": "Georgia", "size": "20px"},
+        {"title": "TheTurquoiseTalisman", "category": "objectsAndArtifacts", "color": "#DEB887", "font": "Courier New", "size": "22px"},
+        {"title": "TheFeatheredSerpent", "category": "charactersAndCreatures", "color": "#D2B48C", "font": "Arial", "size": "24px"},
+        {"title": "GuardianOfTheGlyphs", "category": "charactersAndCreatures", "color": "#BC8F8F", "font": "Verdana", "size": "18px"},
+        {"title": "LostInLabyrinthTemple", "category": "situationsAndDilemmas", "color": "#DAA520", "font": "Trebuchet MS", "size": "20px"},
+        {"title": "SacrificeAtSunset", "category": "situationsAndDilemmas", "color": "#B8860B", "font": "Georgia", "size": "22px"},
+        {"title": "DreadOfTheDarkJaguar", "category": "emotionsAndFeelings", "color": "#CD5C5C", "font": "Courier New", "size": "24px"},
+        {"title": "ElationOfTheEagleWarrior", "category": "emotionsAndFeelings", "color": "#8B4513", "font": "Arial", "size": "18px"},
+        {"title": "SolsticeOfTheSunstone", "category": "timeAndSeasons", "color": "#A0522D", "font": "Verdana", "size": "20px"},
+        {"title": "EquinoxInEmeraldCity", "category": "timeAndSeasons", "color": "#D2691E", "font": "Trebuchet MS", "size": "22px"},
+        {"title": "TheQuakingQuetzal", "category": "naturalPhenomena", "color": "#CD853F", "font": "Georgia", "size": "24px"},
+        {"title": "MonsoonMystery", "category": "naturalPhenomena", "color": "#F4A460", "font": "Courier New", "size": "18px"},
+        {"title": "TheSolarSerpent'sSolstice", "category": "culturalAndSocietal", "color": "#DEB887", "font": "Arial", "size": "20px"},
+        {"title": "CornHarvestCelebration", "category": "culturalAndSocietal", "color": "#D2B48C", "font": "Verdana", "size": "22px"},
+        {"title": "ToTheToltecTombs", "category": "journeysAndQuests", "color": "#BC8F8F", "font": "Trebuchet MS", "size": "24px"},
+        {"title": "SearchForSacredSunstone", "category": "journeysAndQuests", "color": "#DAA520", "font": "Georgia", "size": "18px"}
+    ]
+}

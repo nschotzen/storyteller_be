@@ -1,0 +1,33 @@
+{"text": "Card texture: Where the Wild Things Are, monstrous silhouette against moonlit backdrop, soft watercolor, adventure, matte, 8k, ArtStation winner.",
+    "cardTitles": [
+      {"title": "Silhouette Island", "category": "locationsAndLandmarks", "color": "#006400", "font": "Arial", "size": "20px"},
+      {"title": "Moonlit Clearing", "category": "locationsAndLandmarks", "color": "#8B008B", "font": "Garamond", "size": "22px"},
+      {"title": "Night of the Howling Shadows", "category": "eventsAndOccurrences", "color": "#8B4513", "font": "Verdana", "size": "20px"},
+      {"title": "Whispering Wind Dance", "category": "eventsAndOccurrences", "color": "#2F4F4F", "font": "Calibri", "size": "22px"},
+      {"title": "Map of the Unseen", "category": "objectsAndArtifacts", "color": "#8B0000", "font": "Georgia", "size": "20px"},
+      {"title": "Monstrous Amulet", "category": "objectsAndArtifacts", "color": "#FF8C00", "font": "Arial", "size": "22px"},
+      {"title": "The Watchful Gargoyle", "category": "charactersAndCreatures", "color": "#2E8B57", "font": "Times New Roman", "size": "20px"},
+      {"title": "Shadow Beast", "category": "charactersAndCreatures", "color": "#B22222", "font": "Verdana", "size": "22px"},
+      {"title": "Lost in the Haunted Woods", "category": "situationsAndDilemmas", "color": "#8B008B", "font": "Georgia", "size": "20px"},
+      {"title": "The Whispered Pact", "category": "situationsAndDilemmas", "color": "#6A5ACD", "font": "Arial", "size": "22px"},
+      {"title": "Courage in the Moonlight", "category": "emotionsAndFeelings", "color": "#800000", "font": "Arial", "size": "20px"},
+      {"title": "Joy of the Unknown", "category": "emotionsAndFeelings", "color": "#8B008B", "font": "Georgia", "size": "22px"},
+      {"title": "The Longest Night", "category": "timeAndSeasons", "color": "#800000", "font": "Georgia", "size": "20px"},
+      {"title": "Dawn after Despair", "category": "timeAndSeasons", "color": "#006400", "font": "Arial", "size": "22px"},
+      {"title": "The Whispering Wind", "category": "naturalPhenomena", "color": "#8B0000", "font": "Arial", "size": "20px"},
+      {"title": "The Silent Snowfall", "category": "naturalPhenomena", "color": "#2F4F4F", "font": "Calibri", "size": "22px"},
+      {"title": "The Night's Watch", "category": "culturalAndSocietal", "color": "#8B0000", "font": "Arial", "size": "20px"},
+      {"title": "Feast of the Moon", "category": "culturalAndSocietal", "color": "#2F4F4F", "font": "Calibri", "size": "22px"},
+      {"title": "The Journey to the Forgotten Lands", "category": "journeysAndQuests", "color": "#006400", "font": "Arial", "size": "20px"},
+      {"title": "Venturing into the Shadows", "category": "journeysAndQuests", "color": "#8B008B", "font": "Garamond", "size": "22px"},
+      {"title": "Thunderstorm on the Shore", "category": "weather", "color": "#8A2BE2", "font": "Garamond", "size": "20px"},
+      {"title": "Sunny Spells in the Forest", "category": "weather", "color": "#7FFF00", "font": "Georgia", "size": "22px"},
+      {"title": "Rowing Across the Silent Lake", "category": "modeOfTransportation", "color": "#DAA520", "font": "Calibri", "size": "20px"},
+      {"title": "Trekking the Whistling Woods", "category": "modeOfTransportation", "color": "#CD5C5C", "font": "Arial", "size": "22px"},
+      {"title": "Night at the Hidden Treehouse", "category": "placeToSpendTheNight", "color": "#B8860B", "font": "Tahoma", "size": "20px"},
+      {"title": "Rest in the Mossy Grove", "category": "placeToSpendTheNight", "color": "#4682B4", "font": "Verdana", "size": "22px"},
+      {"title": "The Towering Canopy", "category": "geographicalFeature", "color": "#8B008B", "font": "Georgia", "size": "20px"},
+      {"title": "Boulder-strewn Riverbed", "category": "geographicalFeature", "color": "#6A5ACD", "font": "Arial", "size": "22px"}
+    ]
+  }
+  

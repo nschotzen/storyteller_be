@@ -1,0 +1,26 @@
+
+{
+    "text":"Card texture: Steampunk metal, Victorian, intricate gears, rust patina, industrial revolution, Jules Verne, rivets and bolts, brass tones. 8k. artStation winner. potions. ",
+    "cardTitles": [
+        {"title": "CobblestoneClocktower", "category": "locationsAndLandmarks", "color": "#A67B5B", "font": "Arial", "size": "20px"},
+        {"title": "BrassBridgesByway", "category": "locationsAndLandmarks", "color": "#AE956D", "font": "Times New Roman", "size": "22px"},
+        {"title": "ClockworkCarnival", "category": "eventsAndOccurrences", "color": "#A28C6A", "font": "Verdana", "size": "24px"},
+        {"title": "DayOfTheDirigibles", "category": "eventsAndOccurrences", "color": "#936B4E", "font": "Trebuchet MS", "size": "18px"},
+        {"title": "GoggleGlassGoblet", "category": "objectsAndArtifacts", "color": "#816C61", "font": "Georgia", "size": "20px"},
+        {"title": "CopperCogsCompass", "category": "objectsAndArtifacts", "color": "#947764", "font": "Courier New", "size": "22px"},
+        {"title": "AutomatonAlbatross", "category": "charactersAndCreatures", "color": "#6E513D", "font": "Arial", "size": "24px"},
+        {"title": "GearGriffinGuardian", "category": "charactersAndCreatures", "color": "#695E4F", "font": "Verdana", "size": "18px"},
+        {"title": "NavigatingNebulaNooks", "category": "situationsAndDilemmas", "color": "#776859", "font": "Trebuchet MS", "size": "20px"},
+        {"title": "TrappedInTickingTower", "category": "situationsAndDilemmas", "color": "#5B504F", "font": "Georgia", "size": "22px"},
+        {"title": "TheCurator'sCuriosity", "category": "emotionsAndFeelings", "color": "#4E3D30", "font": "Courier New", "size": "24px"},
+        {"title": "WhisperingWindsOfWonder", "category": "emotionsAndFeelings", "color": "#726E6D", "font": "Arial", "size": "18px"},
+        {"title": "SolsticeInSteamCity", "category": "timeAndSeasons", "color": "#C19A6B", "font": "Verdana", "size": "20px"},
+        {"title": "AutumnInAetherAlley", "category": "timeAndSeasons", "color": "#9F8170", "font": "Trebuchet MS", "size": "22px"},
+        {"title": "TheMistyMechanism", "category": "naturalPhenomena", "color": "#A57164", "font": "Georgia", "size": "24px"},
+        {"title": "TheClockworkCosmos", "category": "naturalPhenomena", "color": "#98777B", "font": "Courier New", "size": "18px"},
+        {"title": "Cogsmith'sConclave", "category": "culturalAndSocietal", "color": "#87421F", "font": "Arial", "size": "20px"},
+        {"title": "PennyFarthingParade", "category": "culturalAndSocietal", "color": "#80461B", "font": "Verdana", "size": "22px"},
+        {"title": "ToTheTitaniumTowers", "category": "journeysAndQuests", "color": "#704F50", "font": "Trebuchet MS", "size": "24px"},
+        {"title": "QuestForTheQuantumQuill", "category": "journeysAndQuests", "color": "#674C47", "font": "Georgia", "size": "18px"}
+    ]
+}

@@ -1,0 +1,26 @@
+
+{
+    "text":"Card texture: Art Deco cinema poster, bold geometric patterns, glossy black and metallic gold, sharp lines, cinematic, glamour and glitz of the Roaring Twenties, high contrast, 8k, ArtStation winner.",
+    "cardTitles": [
+        {"title": "PearlStreetPalace", "category": "locationsAndLandmarks", "color": "#BFA76A", "font": "Futura", "size": "20px"},
+        {"title": "MarbleMetropolisMonolith", "category": "locationsAndLandmarks", "color": "#CAC0B0", "font": "Kabel", "size": "22px"},
+        {"title": "FlapperFêteFrenzy", "category": "eventsAndOccurrences", "color": "#8C7853", "font": "Broadway", "size": "24px"},
+        {"title": "DayOfDazzlingDecadence", "category": "eventsAndOccurrences", "color": "#705438", "font": "Gill Sans", "size": "18px"},
+        {"title": "GlisteningGatsbyGoblet", "category": "objectsAndArtifacts", "color": "#867562", "font": "Palatino", "size": "20px"},
+        {"title": "DiamondDecoDagger", "category": "objectsAndArtifacts", "color": "#726E6A", "font": "Erbar", "size": "22px"},
+        {"title": "CharlestonChimera", "category": "charactersAndCreatures", "color": "#604E3A", "font": "Franklin Gothic", "size": "24px"},
+        {"title": "SpeakeasySphinx", "category": "charactersAndCreatures", "color": "#4C3B2F", "font": "Johnston", "size": "18px"},
+        {"title": "LostInLuxeLabyrinth", "category": "situationsAndDilemmas", "color": "#7F6E61", "font": "Korinna", "size": "20px"},
+        {"title": "EntrappedInElegance", "category": "situationsAndDilemmas", "color": "#705B53", "font": "Elektra", "size": "22px"},
+        {"title": "TheMirthOfMoonshine", "category": "emotionsAndFeelings", "color": "#6E624B", "font": "Metro", "size": "24px"},
+        {"title": "MelancholyInTheMetropolis", "category": "emotionsAndFeelings", "color": "#60504B", "font": "Cooper Black", "size": "18px"},
+        {"title": "SolsticeInSkyline", "category": "timeAndSeasons", "color": "#BFA76A", "font": "Excelsior", "size": "20px"},
+        {"title": "DawnInDecoCity", "category": "timeAndSeasons", "color": "#8B6E53", "font": "News Gothic", "size": "22px"},
+        {"title": "TheGleamingGatsbyGala", "category": "naturalPhenomena", "color": "#8B6E53", "font": "Engravers", "size": "24px"},
+        {"title": "RainsOverRitz", "category": "naturalPhenomena", "color": "#55443B", "font": "Garamond", "size": "18px"},
+        {"title": "Prohibition'sParadox", "category": "culturalAndSocietal", "color": "#7F6E61", "font": "Bernhard Fashion", "size": "20px"},
+        {"title": "TheDazzlingDanceDerby", "category": "culturalAndSocietal", "color": "#726354", "font": "Perpetua", "size": "22px"},
+        {"title": "QuestForTheQuartzQuadrangle", "category": "journeysAndQuests", "color": "#695749", "font": "Zapfino", "size": "24px"},
+        {"title": "JourneyToJazzJunction", "category": "journeysAndQuests", "color": "#55443B", "font": "Didot", "size": "18px"}
+    ]
+}

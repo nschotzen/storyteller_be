@@ -1,0 +1,26 @@
+
+{
+    "text": "Card texture: Atlantis seabed, coral patterns, sunken ruins, marine colors, algae overgrowth, deep-sea mystery, ancient civilization.. 8k. artstation. grainy. cinematic",
+    "cardTitles": [
+        {"title": "SunkenCitySpires", "category": "locationsAndLandmarks", "color": "#1E90FF", "font": "Arial", "size": "20px"},
+        {"title": "AbyssalCaverns", "category": "locationsAndLandmarks", "color": "#4169E1", "font": "Verdana", "size": "22px"},
+        {"title": "RiseOfTheTide", "category": "eventsAndOccurrences", "color": "#0000FF", "font": "Courier New", "size": "18px"},
+        {"title": "TheCoralBloom", "category": "eventsAndOccurrences", "color": "#4682B4", "font": "Georgia", "size": "20px"},
+        {"title": "PearlOfTheDeep", "category": "objectsAndArtifacts", "color": "#5F9EA0", "font": "Trebuchet MS", "size": "22px"},
+        {"title": "TridentOfTriton", "category": "objectsAndArtifacts", "color": "#6495ED", "font": "Arial", "size": "24px"},
+        {"title": "TheSirenOfTheShallows", "category": "charactersAndCreatures", "color": "#87CEEB", "font": "Verdana", "size": "18px"},
+        {"title": "Kraken'sLair", "category": "charactersAndCreatures", "color": "#00008B", "font": "Courier New", "size": "20px"},
+        {"title": "TangledInSeaVines", "category": "situationsAndDilemmas", "color": "#0000CD", "font": "Georgia", "size": "22px"},
+        {"title": "DriftingInTheDepths", "category": "situationsAndDilemmas", "color": "#0000FF", "font": "Trebuchet MS", "size": "18px"},
+        {"title": "TheLonelinessOfTheLeviathan", "category": "emotionsAndFeelings", "color": "#1E90FF", "font": "Arial", "size": "20px"},
+        {"title": "CalmOfTheCoral", "category": "emotionsAndFeelings", "color": "#4169E1", "font": "Verdana", "size": "22px"},
+        {"title": "DawnInTheDeeps", "category": "timeAndSeasons", "color": "#0000FF", "font": "Courier New", "size": "18px"},
+        {"title": "TwilightOfTheTide", "category": "timeAndSeasons", "color": "#4682B4", "font": "Georgia", "size": "20px"},
+        {"title": "TheWhirlpool'sWhisper", "category": "naturalPhenomena", "color": "#5F9EA0", "font": "Trebuchet MS", "size": "22px"},
+        {"title": "SongOfTheSeafoam", "category": "naturalPhenomena", "color": "#6495ED", "font": "Arial", "size": "24px"},
+        {"title": "RitualOfTheReefs", "category": "culturalAndSocietal", "color": "#87CEEB", "font": "Verdana", "size": "18px"},
+        {"title": "FestivalOfTheFishfolk", "category": "culturalAndSocietal", "color": "#00008B", "font": "Courier New", "size": "20px"},
+        {"title": "VoyageToTheVortex", "category": "journeysAndQuests", "color": "#0000CD", "font": "Georgia", "size": "22px"},
+        {"title": "Seabed'sSecrets", "category": "journeysAndQuests", "color": "#0000FF", "font": "Trebuchet MS", "size": "18px"}
+    ]
+}

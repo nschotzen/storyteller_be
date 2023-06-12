@@ -1,0 +1,36 @@
+
+{   
+    "text:": "Card texture: Brandon Sanderson's Stormlight Archive, ancient glyphs etched in stone, vivid lightning-like flourishes, epic fantasy, grainy, 8k, ArtStation winner. full frame.",
+    "cardTitles": [
+        {"title": "The Duskwoods Encounter", "category": "locationsAndLandmarks", "color": "#F8ED2E", "font": "Arial", "size": "20px"},
+        {"title": "Storm Over Stonepeak", "category": "locationsAndLandmarks", "color": "#48C9B0", "font": "Times New Roman", "size": "22px"},
+        {"title": "A Wisp in the Waterways", "category": "eventsAndOccurrences", "color": "#E74C3C", "font": "Courier New", "size": "18px"},
+        {"title": "Beneath the Emberfall", "category": "objectsAndArtifacts", "color": "#3498DB", "font": "Verdana", "size": "22px"},
+        {"title": "Shadows of Silent Spires", "category": "charactersAndCreatures", "color": "#58D68D", "font": "Georgia", "size": "24px"},
+        {"title": "The Crystal Caverns Secret", "category": "situationsAndDilemmas", "color": "#5D6D7E", "font": "Trebuchet MS", "size": "18px"},
+        {"title": "Dusk at Dawnhold", "category": "emotionsAndFeelings", "color": "#7D3C98", "font": "Arial", "size": "20px"},
+        {"title": "The Whispering Wilds", "category": "timeAndSeasons", "color": "#C39BD3", "font": "Times New Roman", "size": "22px"},
+        {"title": "Gleam of the Glowstone Grotto", "category": "naturalPhenomena", "color": "#B2BABB", "font": "Courier New", "size": "18px"},
+        {"title": "Frostfire at Fablefort", "category": "culturalAndSocietal", "color": "#45B39D", "font": "Verdana", "size": "22px"},
+        {"title": "Glyphstone's Sanctuary", "category": "locationsAndLandmarks", "color": "#AAB7B8", "font": "Arial", "size": "20px"},
+        {"title": "Maelstrom Spire", "category": "locationsAndLandmarks", "color": "#6C3483", "font": "Times New Roman", "size": "22px"},
+        {"title": "Tempest's Twilight", "category": "eventsAndOccurrences", "color": "#1C2833", "font": "Courier New", "size": "18px"},
+        {"title": "Night of the Quaking Earth", "category": "eventsAndOccurrences", "color": "#641E16", "font": "Verdana", "size": "22px"},
+        {"title": "The Thunderforged Relic", "category": "objectsAndArtifacts", "color": "#9A7D0A", "font": "Georgia", "size": "24px"},
+        {"title": "Chronicles of the Zephyr", "category": "objectsAndArtifacts", "color": "#A04000", "font": "Trebuchet MS", "size": "18px"},
+        {"title": "The Stormbringer Serpent", "category": "charactersAndCreatures", "color": "#0E6655", "font": "Arial", "size": "20px"},
+        {"title": "Guardian of the Runic Ruins", "category": "charactersAndCreatures", "color": "#21618C", "font": "Times New Roman", "size": "22px"},
+        {"title": "Lightning Labyrinth Lost", "category": "situationsAndDilemmas", "color": "#1B4F72", "font": "Courier New", "size": "18px"},
+        {"title": "Besieged by the Gale", "category": "situationsAndDilemmas", "color": "#154360", "font": "Verdana", "size": "22px"},
+        {"title": "The Mournful Monsoon", "category": "emotionsAndFeelings", "color": "#1A5276", "font": "Georgia", "size": "24px"},
+        {"title": "Joy of the Jade Zephyr", "category": "emotionsAndFeelings", "color": "#196F3D", "font": "Trebuchet MS", "size": "18px"},
+        {"title": "Solstice in the Storm's Embrace", "category": "timeAndSeasons", "color": "#27AE60", "font": "Arial", "size": "20px"},
+        {"title": "Autumn Gale at Sundown", "category": "timeAndSeasons", "color": "#2ECC71", "font": "Times New Roman", "size": "22px"},
+        {"title": "The Eye of the Maelstrom", "category": "naturalPhenomena", "color": "#3498DB", "font": "Courier New", "size": "18px"},
+        {"title": "Whispers of the Windwall", "category": "naturalPhenomena", "color": "#5DADE2", "font": "Verdana", "size": "22px"},
+        {"title": "The Tempest Tamer's Trial", "category": "culturalAndSocietal", "color": "#85C1E9", "font": "Georgia", "size": "24px"},
+        {"title": "Harmony in the Hailstone Halls", "category": "culturalAndSocietal", "color": "#AED6F1", "font": "Trebuchet MS", "size": "18px"},
+        {"title": "The Arcane Cyclone's Call", "category": "journeysAndQuests", "color": "#D6EAF8", "font": "Arial", "size": "20px"},
+        {"title": "Pilgrimage to the Thunder Peaks", "category": "journeysAndQuests", "color": "#EBF5FB", "font": "Times New Roman", "size": "22px"}
+    ]
+}

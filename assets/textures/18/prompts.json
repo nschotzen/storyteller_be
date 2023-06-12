@@ -1,0 +1,25 @@
+{
+    "text":"Card texture: The Secret Garden, intricate ivy vines and keyhole, soft colors, botanical flourishes, classic children's literature, matte, 8k, ArtStation winner.",
+        "cardTitles": [
+          {"title": "Hidden Ivy Passage", "category": "locationsAndLandmarks", "color": "#006400", "font": "Verdana", "size": "20px"},
+          {"title": "Keyhole's Secret", "category": "locationsAndLandmarks", "color": "#556B2F", "font": "Garamond", "size": "22px"},
+          {"title": "Blossoming Intrigue", "category": "eventsAndOccurrences", "color": "#8B0000", "font": "Arial", "size": "20px"},
+          {"title": "The Unveiling Bloom", "category": "eventsAndOccurrences", "color": "#B22222", "font": "Times New Roman", "size": "22px"},
+          {"title": "The Garden's Guardian", "category": "charactersAndCreatures", "color": "#228B22", "font": "Georgia", "size": "20px"},
+          {"title": "The Whispering Ivy", "category": "charactersAndCreatures", "color": "#6B8E23", "font": "Calibri", "size": "22px"},
+          {"title": "Lost Among Vines", "category": "situationsAndDilemmas", "color": "#A0522D", "font": "Arial", "size": "20px"},
+          {"title": "Path to the Hidden Glade", "category": "situationsAndDilemmas", "color": "#B8860B", "font": "Garamond", "size": "22px"},
+          {"title": "Discovery in the Thicket", "category": "journeysAndQuests", "color": "#8B4513", "font": "Verdana", "size": "20px"},
+          {"title": "The Unlocked Enigma", "category": "journeysAndQuests", "color": "#DAA520", "font": "Times New Roman", "size": "22px"},
+          {"title": "The Enchanted Key", "category": "objectsAndArtifacts", "color": "#006400", "font": "Garamond", "size": "20px"},
+          {"title": "The Whispering Leaves", "category": "objectsAndArtifacts", "color": "#556B2F", "font": "Verdana", "size": "22px"},
+          {"title": "Joy of Discovery", "category": "emotionsAndFeelings", "color": "#8B0000", "font": "Arial", "size": "20px"},
+          {"title": "Puzzlement in the Petals", "category": "emotionsAndFeelings", "color": "#B22222", "font": "Times New Roman", "size": "22px"},
+          {"title": "Old Manor Mysteries", "category": "culturalAndSocietal", "color": "#228B22", "font": "Georgia", "size": "20px"},
+          {"title": "Traditions of the Garden", "category": "culturalAndSocietal", "color": "#6B8E23", "font": "Calibri", "size": "22px"},
+          {"title": "First Light in the Garden", "category": "timeAndSeasons", "color": "#A0522D", "font": "Arial", "size": "20px"},
+          {"title": "Beneath the Autumn Leaves", "category": "timeAndSeasons", "color": "#B8860B", "font": "Garamond", "size": "22px"},
+          {"title": "The Scent of Blooming Secrets", "category": "naturalPhenomena", "color": "#8B4513", "font": "Verdana", "size": "20px"},
+          {"title": "The Hush of the Hidden Glade", "category": "naturalPhenomena", "color": "#DAA520", "font": "Times New Roman", "size": "22px"}
+        ]
+}

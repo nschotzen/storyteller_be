@@ -1,0 +1,25 @@
+{
+    "text":"Card texture: Fairy tale book cover, embossed leather, golden filigree, mystical forest and castle imagery, Brothers Grimm, worn by countless readings, high contrast, 8k, ArtStation winner.",
+    "cardTitles": [
+        {"title": "WhisperingWillows", "category": "locationsAndLandmarks", "color": "#8B4513", "font": "Copperplate Gothic", "size": "20px"},
+        {"title": "Dragon'sMountainPeak", "category": "locationsAndLandmarks", "color": "#A0522D", "font": "Goudy Old Style", "size": "22px"},
+        {"title": "FeastOfFireflies", "category": "eventsAndOccurrences", "color": "#B22222", "font": "Baskerville Old Face", "size": "20px"},
+        {"title": "Twilight'sCrown", "category": "eventsAndOccurrences", "color": "#CD853F", "font": "Bookman Old Style", "size": "22px"},
+        {"title": "MossCoveredKey", "category": "objectsAndArtifacts", "color": "#D2691E", "font": "Courier New", "size": "20px"},
+        {"title": "MapleLeafManuscript", "category": "objectsAndArtifacts", "color": "#8B4513", "font": "Gill Sans", "size": "22px"},
+        {"title": "SongbirdOfSapphire", "category": "charactersAndCreatures", "color": "#A52A2A", "font": "Impact", "size": "20px"},
+        {"title": "TheBabblingBrookNymph", "category": "charactersAndCreatures", "color": "#B22222", "font": "Lucida Bright", "size": "22px"},
+        {"title": "LostInLanternLight", "category": "situationsAndDilemmas", "color": "#CD853F", "font": "Palatino Linotype", "size": "20px"},
+        {"title": "ChasingTheGoldenGlow", "category": "situationsAndDilemmas", "color": "#D2691E", "font": "Rockwell", "size": "22px"},
+        {"title": "TheElfinElation", "category": "emotionsAndFeelings", "color": "#8B4513", "font": "Times New Roman", "size": "20px"},
+        {"title": "GriefOfTheGreatOak", "category": "emotionsAndFeelings", "color": "#A52A2A", "font": "Verdana", "size": "22px"},
+        {"title": "DuskInDewDropDell", "category": "timeAndSeasons", "color": "#B22222", "font": "Garamond", "size": "20px"},
+        {"title": "Winter'sWaltzInWillowWood", "category": "timeAndSeasons", "color": "#CD853F", "font": "Bodoni MT", "size": "22px"},
+        {"title": "MurmurOfTheMoonflower", "category": "naturalPhenomena", "color": "#D2691E", "font": "Bernhard Modern", "size": "20px"},
+        {"title": "TheSighOfTheSilverStream", "category": "naturalPhenomena", "color": "#8B4513", "font": "Caslon", "size": "22px"},
+        {"title": "TaleOfTheThornThrone", "category": "culturalAndSocietal", "color": "#A52A2A", "font": "Century", "size": "20px"},
+        {"title": "BalladOfTheBlossomBanquet", "category": "culturalAndSocietal", "color": "#B22222", "font": "Century Gothic", "size": "22px"},
+        {"title": "QuestForTheQuartzQueen", "category": "journeysAndQuests", "color": "#CD853F", "font": "Futura", "size": "20px"},
+        {"title": "VoyageThroughTheVelvetValley", "category": "journeysAndQuests", "color": "#D2691E", "font": "Goudy", "size": "22px"}
+    ]
+}

@@ -1,0 +1,26 @@
+
+{
+    "text": "Card texture:Spaceship hull, Star Trek, advanced alloys, sci-fi tech, interstellar voyages, panel lines, brushed steel, distant galaxies.",
+    "cardTitles": [
+        {"title": "StarbaseStation", "category": "locationsAndLandmarks", "color": "#708090", "font": "Courier New", "size": "20px"},
+        {"title": "Orion'sBeltway", "category": "locationsAndLandmarks", "color": "#778899", "font": "Arial", "size": "22px"},
+        {"title": "SupernovaSpectacle", "category": "eventsAndOccurrences", "color": "#A9A9A9", "font": "Verdana", "size": "24px"},
+        {"title": "PulsarPulse", "category": "eventsAndOccurrences", "color": "#B0C4DE", "font": "Trebuchet MS", "size": "18px"},
+        {"title": "PhotonPendant", "category": "objectsAndArtifacts", "color": "#696969", "font": "Georgia", "size": "20px"},
+        {"title": "QuantumQuill", "category": "objectsAndArtifacts", "color": "#808080", "font": "Courier New", "size": "22px"},
+        {"title": "GalacticGuardian", "category": "charactersAndCreatures", "color": "#C0C0C0", "font": "Arial", "size": "24px"},
+        {"title": "NeutronNymph", "category": "charactersAndCreatures", "color": "#D3D3D3", "font": "Verdana", "size": "18px"},
+        {"title": "TrappedInTimeWarp", "category": "situationsAndDilemmas", "color": "#DCDCDC", "font": "Trebuchet MS", "size": "20px"},
+        {"title": "StuckInSpaceStorm", "category": "situationsAndDilemmas", "color": "#708090", "font": "Georgia", "size": "22px"},
+        {"title": "DreadOfDarkMatter", "category": "emotionsAndFeelings", "color": "#778899", "font": "Courier New", "size": "24px"},
+        {"title": "JoyOfJumpDrive", "category": "emotionsAndFeelings", "color": "#A9A9A9", "font": "Arial", "size": "18px"},
+        {"title": "EclipseInEridanus", "category": "timeAndSeasons", "color": "#B0C4DE", "font": "Verdana", "size": "20px"},
+        {"title": "DawnOfDistantStars", "category": "timeAndSeasons", "color": "#696969", "font": "Trebuchet MS", "size": "22px"},
+        {"title": "TheAsteroidAnomaly", "category": "naturalPhenomena", "color": "#808080", "font": "Georgia", "size": "24px"},
+        {"title": "Comet'sCry", "category": "naturalPhenomena", "color": "#C0C0C0", "font": "Courier New", "size": "18px"},
+        {"title": "TheStarshipSynod", "category": "culturalAndSocietal", "color": "#D3D3D3", "font": "Arial", "size": "20px"},
+        {"title": "Voyager'sValediction", "category": "culturalAndSocietal", "color": "#DCDCDC", "font": "Verdana", "size": "22px"},
+        {"title": "ToTheTitanMoon", "category": "journeysAndQuests", "color": "#708090", "font": "Trebuchet MS", "size": "24px"},
+        {"title": "SearchForSingularity", "category": "journeysAndQuests", "color": "#778899", "font": "Georgia", "size": "18px"}
+    ]
+}
