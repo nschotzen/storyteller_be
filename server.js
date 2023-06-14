@@ -32,10 +32,10 @@ app.get('/api/cards', async (req, res) => {
             cards.push({
                 url: `/assets/textures/${folderNumber}/${textures[textureIndex]}`,
                 cover: "", // Add logic for cover
-                title: prompts.cardTitles[titleIndex].title,
-                fontName: prompts.cardTitles[titleIndex].font,
-                fontSize: prompts.cardTitles[titleIndex].size,
-                fontColor: prompts.cardTitles[titleIndex].color
+                title: prompts?.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].title : "working title",
+                fontName: prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].font : "Arial ",
+                fontSize: prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].size : "22",
+                fontColor: prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].color : "red"
             });
         }
         console.log(`Returning cards ${JSON.stringify(cards)}`);
