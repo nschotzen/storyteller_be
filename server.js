@@ -21,7 +21,7 @@ app.get('/api/cards', async (req, res) => {
         let cards = [];
 
         for (let i = 0; i < n; i++) {
-            const folderNumber = Math.floor(Math.random() * 18) + 1;
+            const folderNumber = Math.floor(Math.random() * 29) + 1;
             const textures = await getTextureFiles(folderNumber);
             const textureIndex = Math.floor(Math.random() * textures.length);
 
