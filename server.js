@@ -27,14 +27,14 @@ app.get('/api/cards', async (req, res) => {
 
             const prompts = require(`./assets/textures/${folderNumber}/prompts.json`);
             // console.log(JSON.stringify(prompts))
-            const titleIndex = Math.floor(Math.random() * prompts.cardTitles.length);
+            const titleIndex = prompts?.cardTitles ? Math.floor(Math.random() * prompts.cardTitles.length) : 0;
 
             cards.push({
                 url: `/assets/textures/${folderNumber}/${textures[textureIndex]}`,
                 cover: "", // Add logic for cover
-                title: prompts?.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].title : "working title",
+                title: prompts.cardTitles.length > 0  ? prompts.cardTitles[titleIndex].title : "working title",
                 fontName: prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].font : "Arial ",
-                fontSize: prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].size : "22",
+                fontSize: prompts.cardTitles.length > 0 ? `${parseInt(parseInt(prompts.cardTitles[titleIndex].size)*1.3)}px` : "32px",
                 fontColor: prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].color : "red"
             });
         }
