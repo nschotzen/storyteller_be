@@ -1,0 +1,190 @@
+{
+    "text": "Card texture: 'Inspired by Don Maitz's art style and Elric of Melniboné, oil paint texture forms a tumultuous sea, storm-inspired swirls drift towards the edges, a hidden rune in the bottom left corner for fans to find, epic fantasy, grainy, 8k, ArtStation winner. cinematic",
+    "cardTitles": [
+        {
+            "title": "The Unseen Tempest",
+            "category": "naturalPhenomena",
+            "color": "#4B0082",
+            "font": "Garamond",
+            "size": "18px",
+            "adventure_name": "The Rune in the Storm",
+            "adventure_id": 1
+        },
+        {
+            "title": "Rune of the Raging Sea",
+            "category": "objectsAndArtifacts",
+            "color": "#00008B",
+            "font": "Georgia",
+            "size": "20px",
+            "adventure_name": "The Rune in the Storm",
+            "adventure_id": 1
+        },
+        {
+            "title": "Survival Amidst Swirls",
+            "category": "situationsAndDilemmas",
+            "color": "#191970",
+            "font": "Times New Roman",
+            "size": "22px",
+            "adventure_name": "The Rune in the Storm",
+            "adventure_id": 1
+        },
+        {
+            "title": "The Sea's Siren Song",
+            "category": "naturalPhenomena",
+            "color": "#483D8B",
+            "font": "Garamond",
+            "size": "18px",
+            "adventure_name": "Art of the Sea",
+            "adventure_id": 2
+        },
+        {
+            "title": "Brush with Destiny",
+            "category": "objectsAndArtifacts",
+            "color": "#6A5ACD",
+            "font": "Georgia",
+            "size": "20px",
+            "adventure_name": "Art of the Sea",
+            "adventure_id": 2
+        },
+        {
+            "title": "The Masterpiece Unveiled",
+            "category": "eventsAndOccurrences",
+            "color": "#7B68EE",
+            "font": "Times New Roman",
+            "size": "22px",
+            "adventure_name": "Art of the Sea",
+            "adventure_id": 2
+        },
+        {
+            "title": "The Tempest's Prison",
+            "category": "naturalPhenomena",
+            "color": "#9400D3",
+            "font": "Garamond",
+            "size": "18px",
+            "adventure_name": "The Storm-Bound Ship",
+            "adventure_id": 3
+        },
+        {
+            "title": "Rune of the Deep",
+            "category": "objectsAndArtifacts",
+            "color": "#9932CC",
+            "font": "Georgia",
+            "size": "20px",
+            "adventure_name": "The Storm-Bound Ship",
+            "adventure_id": 3
+        },
+        {
+            "title": "Secrets of the Sea Bed",
+            "category": "eventsAndOccurrences",
+            "color": "#BA55D3",
+            "font": "Times New Roman",
+            "size": "22px",
+            "adventure_name": "The Storm-Bound Ship",
+            "adventure_id": 3
+        }
+    ],
+    "adventures": [
+        {
+            "adventure_id": 1,
+            "adventure_name": "The Rune in the Storm",
+            "description": "This adventure centers around a mysterious rune discovered in the midst of a deadly sea storm. The characters must decipher the rune's meaning, survive the storm, and deal with the aftermath.",
+            "titles": [
+                {
+                    "title": "The Unseen Tempest",
+                    "category": "naturalPhenomena",
+                    "color": "#4B0082",
+                    "font": "Garamond",
+                    "size": "18px",
+                    "adventure_name": "The Rune in the Storm",
+                    "adventure_id": 1
+                },
+                {
+                    "title": "Rune of the Raging Sea",
+                    "category": "objectsAndArtifacts",
+                    "color": "#00008B",
+                    "font": "Georgia",
+                    "size": "20px",
+                    "adventure_name": "The Rune in the Storm",
+                    "adventure_id": 1
+                },
+                {
+                    "title": "Survival Amidst Swirls",
+                    "category": "situationsAndDilemmas",
+                    "color": "#191970",
+                    "font": "Times New Roman",
+                    "size": "22px",
+                    "adventure_name": "The Rune in the Storm",
+                    "adventure_id": 1
+                }
+            ]
+        },
+        {
+            "adventure_id": 2,
+            "adventure_name": "Art of the Sea",
+            "description": "In this adventure, a renowned artist in this universe is inspired by the tumultuous sea and the hidden rune to create a masterpiece that's somehow connected to the destiny of the kingdom.",
+            "titles": [
+                {
+                    "title": "The Sea's Siren Song",
+                    "category": "naturalPhenomena",
+                    "color": "#483D8B",
+                    "font": "Garamond",
+                    "size": "18px",
+                    "adventure_name": "Art of the Sea",
+                    "adventure_id": 2
+                },
+                {
+                    "title": "Brush with Destiny",
+                    "category": "objectsAndArtifacts",
+                    "color": "#6A5ACD",
+                    "font": "Georgia",
+                    "size": "20px",
+                    "adventure_name": "Art of the Sea",
+                    "adventure_id": 2
+                },
+                {
+                    "title": "The Masterpiece Unveiled",
+                    "category": "eventsAndOccurrences",
+                    "color": "#7B68EE",
+                    "font": "Times New Roman",
+                    "size": "22px",
+                    "adventure_name": "Art of the Sea",
+                    "adventure_id": 2
+                }
+            ]
+        },
+        {
+            "adventure_id": 3,
+            "adventure_name": "The Storm-Bound Ship",
+            "description": "A group of adventurers are trapped on a ship amidst a raging storm. Their only guide through the tempest is a mysterious rune, leading them to discover ancient secrets buried deep beneath the sea.",
+            "titles": [
+                {
+                    "title": "The Tempest's Prison",
+                    "category": "naturalPhenomena",
+                    "color": "#9400D3",
+                    "font": "Garamond",
+                    "size": "18px",
+                    "adventure_name": "The Storm-Bound Ship",
+                    "adventure_id": 3
+                },
+                {
+                    "title": "Rune of the Deep",
+                    "category": "objectsAndArtifacts",
+                    "color": "#9932CC",
+                    "font": "Georgia",
+                    "size": "20px",
+                    "adventure_name": "The Storm-Bound Ship",
+                    "adventure_id": 3
+                },
+                {
+                    "title": "Secrets of the Sea Bed",
+                    "category": "eventsAndOccurrences",
+                    "color": "#BA55D3",
+                    "font": "Times New Roman",
+                    "size": "22px",
+                    "adventure_name": "The Storm-Bound Ship",
+                    "adventure_id": 3
+                }
+            ]
+        }
+    ]
+}
