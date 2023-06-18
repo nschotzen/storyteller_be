@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
+const directExternalApiCall = require("./ai/openai/utils.js")
+const generatePrompts = require("./ai/openai/utils.js")
 
 const app = express();
 app.use(cors());
@@ -15,13 +17,26 @@ const getTextureFiles = async (folderNumber) => {
     return files.filter(file => file.endsWith('.jpeg') || file.endsWith('.png'));
 }
 
+
+app.get('/generatePrefixes', async (req, res) => {
+    const textureId = req.query.texture;
+    const numberOfPrefixes = req.query.numberOfPrefixes || 10; // If number of prefixes is not provided, default to 1
+  
+    const prompts = generatePrompts(texture, numberOfPrefixes);
+    const prefixes = await directExternalApiCall(prompts);
+    
+    res.json(prefixes);
+  });
+  
+
 app.get('/api/cards', async (req, res) => {
     const n = req.query.n || 4;
     try {
         let cards = [];
 
+        const folderNumber = 31//Math.floor(Math.random() * 33) + 1;
         for (let i = 0; i < n; i++) {
-            const folderNumber = Math.floor(Math.random() * 29) + 1;
+            
             const textures = await getTextureFiles(folderNumber);
             const textureIndex = Math.floor(Math.random() * textures.length);
 
@@ -32,10 +47,10 @@ app.get('/api/cards', async (req, res) => {
             cards.push({
                 url: `/assets/textures/${folderNumber}/${textures[textureIndex]}`,
                 cover: "", // Add logic for cover
-                title: prompts.cardTitles.length > 0  ? prompts.cardTitles[titleIndex].title : "working title",
-                fontName: prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].font : "Arial ",
-                fontSize: prompts.cardTitles.length > 0 ? `${parseInt(parseInt(prompts.cardTitles[titleIndex].size)*1.3)}px` : "32px",
-                fontColor: prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].color : "red"
+                title: prompts.cardTitles && prompts.cardTitles.length > 0  ? prompts.cardTitles[titleIndex].title : "working title",
+                fontName: prompts.cardTitles && prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].font : "Arial ",
+                fontSize: prompts.cardTitles && prompts.cardTitles.length > 0 ? `${parseInt(parseInt(prompts.cardTitles[titleIndex].size)*1.3)}px` : "32px",
+                fontColor: prompts.cardTitles && prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].color : "red"
             });
         }
         console.log(`Returning cards ${JSON.stringify(cards)}`);
