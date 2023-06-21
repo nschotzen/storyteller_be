@@ -39,22 +39,40 @@ const OPENAI_API_KEYS = [
     return new OpenAIApi(configuration);
   }
 
-  function generatePrefixesPrompt(texture=null, numberOfPrefixes=10){
-    const prompt = texture? `take a deep look at the concise texture prompt that's given here: it's results in an image that the PC just chose: 
-    it's  back side of a storyteller card.
-    it encapsulate a universe yet unknown to the player but it has some atmosphere. it's a mixture of influences. 
-    this is the texture: ${texture}.
-    please Generate a set of ${numberOfPrefixes} intriguing, stand-alone opening lines or prefixes that you think would be fitting to that texture. 
-    they can vary in length between 3-8 words. and should all feel as if they're taken from inside a story. they have a storytelling quality about them.
-    please return them as a list of strings
-    `
-    : `please Generate a set of ${numberOfPrefixes} intriguing, stand-alone opening lines or prefixes for a variety of stories across different universes and genres. 
-    they can vary in length between 3-8 words. and should all feel as if they're taken from inside a story. they have a storytelling quality about them.
-    please return them as a list of strings`
-    
+  function generatePrefixesPrompt(userText=null, texture=null, userTextLength=-1, variations=4, varyTexture=false) {
 
-  }
-  
+    // Base for the continuation prompt
+    let continuationPrompt = userText ? `You have been given the following story opening by the player: "${userText}". ` : ``;
+
+    // Adding texture information if available
+    if (texture) {
+        continuationPrompt += `You are also given the following texture description which encapsulates a universe yet unknown to the player: "${texture}". `;
+    }
+
+    // Adding instruction for texture variation
+    if (varyTexture && texture) {
+        continuationPrompt += `For each story continuation, please generate a new variation of the texture that fits the story's atmosphere and theme. `;
+    }
+
+    continuationPrompt += `Please generate a set of ${variations} intriguing story continuations in response to the provided text`;
+
+    if (texture) {
+        continuationPrompt += ` and texture`;
+    }
+
+    continuationPrompt += `. Each continuation should be a standalone opening line or "prefix" for a story. ` +
+                          `The length of each continuation should ideally adhere to the Golden Ratio, meaning if the user's input was ${userTextLength} words, ` +
+                          `the continuation should contain about ${Math.round(userTextLength * 1.61803398875)} words. ` +
+                          `Each continuation should feel as if it's part of a larger story and display storytelling qualities. ` +
+                          `Return the results in the following JSON format: ` +
+                          `[{"prefix": "<story continuation>", "texture": "${texture}", "fontName": "<fontName>", "fontSize": "<fontSize>", "fontColor": "<fontColor>"}]`;
+    
+    // Return the prompt for GPT-4
+    return continuationPrompt;
+}
+
+
+
   async function directExternalApiCall(prompts, max_tokens = 2500) {
     const completion = await getOpenaiClient().createChatCompletion({
       ...openAIConfig,
@@ -71,6 +89,7 @@ const OPENAI_API_KEYS = [
 
 module.exports = {
     directExternalApiCall,
+    generatePrefixesPrompt
   };
   
   
