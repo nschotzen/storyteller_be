@@ -2,7 +2,7 @@ const { OpenAIApi, Configuration } = require('openai');
 
 
 const OPENAI_API_KEYS = [
-    "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"
+    "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"
 ];
 
 const OPENAI_API_KEYS_FREE = [
@@ -106,6 +106,13 @@ function generateMasterCartographerChat(paragraph) {
                     remember this is a chat. you only play the master cartographer. WAIT FOR THE PC TO RESPOND. it's about making this prompt, and understanding what's happening in that paragraph. TOGETHER. WAIT for the PC. ANSWER in DIRECT talk only. don't mention anything else bof influence beside the paragraph. you're also soaked in it. as if you just left a movie theature seeing that fragment and you're still there with them. soaked in it.`
 }
 
+function generate_texture_by_fragment(fragment){
+    const prompt = `Generate 4 distinctive descriptions for the texture of a card that corresponds to this text fragment taken from a new unfolding story: "${fragment}" 
+    Each texture description should be interpreting the text fragment in a different way. taking it to a different direction. the direction can be influenced by other related cultural influences, whether it be books, movies, myths etc. but in a surprising various options. The textures should have a keyword format, utilizing terms such as RPG, cinematic, ArtStation, ArtStation winner, grainy, embellishments, decorative styles, etc. Note that these descriptions are for the texture of a card, not an illustration. They should provide an engaging aesthetic complement to the story continuation. For example, 'Card texture: Inspired by Brom's art style and Dark Sun, a desert of sizzling oranges and browns, distressed edges give a sense of scorched earth, embellishments of a twisted dragon in the top right, high contrast, 8k, RPG card texture.', 'Card texture: Inspired by Stephan Martinière's art style and A Song of Ice and Fire, a meticulously detailed castle silhouette against a frigid landscape, Northern-inspired knotwork at the corners, the matte finish brings out the texture of the snow, dark fantasy, 8k, ArtStation winner. 
+    make the card texture subtle and so the influence. tending into more abstract or symbolic. archetypal
+    please return the results as a JSON list of strings (so it would not fail on JSON.parse(output) )`
+}
+
 
 function generateExpertList(paragraph) {
 
@@ -143,7 +150,7 @@ function generateExpertList(paragraph) {
 
 
 function generateFragmentsBeginnings(numberOfFragments = 20) {
-    const prompt = `Instructions: Generate ${numberOfFragments} distinct sentence fragments to initiate a collaborative storytelling game. These fragments should be atmospheric, thought-provoking, and varied in length, ranging from just a 3 words up to a sentence of 15 words. They should provide a palpable sense of setting, characters, or events, enticing participants to continue the narrative in their unique style.
+    const prompt = `Instructions: Generate ${numberOfFragments} distinct sentence fragments as if they're taken from within a novel, to initiate a collaborative storytelling game. These fragments should be atmospheric, thought-provoking, and varied in length, ranging from just a 3 words up to a sentence of 15 words. They should provide a palpable sense of setting, characters, or events, enticing participants to continue the narrative in their unique style.
     the fragments are taken from the middle of a book...they don't have to be dramatic, actually, they're aren't so dramatic, just somehow encapsulate the atmosphere of the book and its unique universe. no need to showoff. be as concrete as possible. so anyone who reads the fragments would feel as if they're really taken from within a book. remember these sentences are fragments, they're not standing alone. but they should have some echo..the essence of the storytelling.
     
     some fragments work better when they're shorter and some when they're not like:
@@ -190,12 +197,18 @@ function generateFragmentsBeginnings(numberOfFragments = 20) {
     The fragments should cover a diverse array of themes, styles, and settings, subtly nudging the storytellers towards potential story paths without enforcing a strict direction. Use tangible imagery while avoiding excessive drama. various writing genres. like journals: "Captain's log: No wind, 15th day in a row. the crew is restless." descriptive: "it was almost sunset as they finally reached the top". direct speech: "Leave! each fragment should present a compelling piece of the narrative puzzle.
     
     Our ultimate goal is to stimulate creativity and encourage engaging interaction among the participants. The fragments should inspire them to explore various narrative routes, each contributing to the unfolding of a unique, collective story. A powerful fragment like "Diary entry: Tonight, the shadows whispered back" might ignite a flurry of imaginative responses. And remember, a good story doesn't need to answer all questions—it invites its listeners to venture into the realm of 'What If?'.
+
+    Be subtle yet inspiring, avoid cliches. dare to be specific. very specific and bold. dare to be influenced by famous writers and their style, different genres, eras, and atmosphere. dare to visit a very concrete momen
     
     please return ${Math.round((numberOfFragments - 2) / 3)} results in lengths 3-6 words
     ${Math.round((numberOfFragments - 2) / 3)} results 7-10 words
     ${Math.round((numberOfFragments - 2) / 3)} results 11-13 words
-    2 results 14-15 words`;
+    2 results 14-15 words.
+    
+    return the results as a JSON list of fragment strings, and return that only. so it could be parsed easily in a code! (otherwise JSON.parse(res) would fail).`;
+
 }
+
 
 
 function generagenerateContinuationPrompt(userText = null) {
@@ -207,7 +220,8 @@ function generagenerateContinuationPrompt(userText = null) {
     modifying, or replacing a total of up to ${Math.round(userTextLength * 1.61803398875) - userTextLength} words, 
     but no less than 4!!. 
     You may choose to place your words before, within, or after the existing fragment. 
-    If the fragment ends in a preposition or other word that seems to inspire a continuation, please ensure you continue from it
+    If the fragment ends in a preposition or other word that seems to inspire a continuation, please ensure you continue from it.
+    for example if the fragment is "Despite the rough roads, it was almost sunset as they finally reached the border" adding they finally reached the civil-war torn border adds with two words a whole new context of narrative. I like contextual additions. then just mere adjectives. but be subtle.
     
     The twist is that other participants are playing the same game with different fragments. After five rounds, everyone tries to spot the "seams" where one participant's contribution transitions into the other's. The team (you + AI) that achieves the most seamless integration scores the most points.
     
