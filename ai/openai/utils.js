@@ -2,7 +2,7 @@ const { OpenAIApi, Configuration } = require('openai');
 
 
 const OPENAI_API_KEYS = [
-    "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"
+    "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"
 ];
 
 const OPENAI_API_KEYS_FREE = [
@@ -108,7 +108,8 @@ function generateMasterCartographerChat(paragraph) {
 
 function generate_texture_by_fragment(fragment){
     const prompt = `Generate 4 distinctive descriptions for the texture of a card that corresponds to this text fragment taken from a new unfolding story: "${fragment}" 
-    Each texture description should be interpreting the text fragment in a different way. taking it to a different direction. the direction can be influenced by other related cultural influences, whether it be books, movies, myths etc. but in a surprising various options. The textures should have a keyword format, utilizing terms such as RPG, cinematic, ArtStation, ArtStation winner, grainy, embellishments, decorative styles, etc. Note that these descriptions are for the texture of a card, not an illustration. They should provide an engaging aesthetic complement to the story continuation. For example, 'Card texture: Inspired by Brom's art style and Dark Sun, a desert of sizzling oranges and browns, distressed edges give a sense of scorched earth, embellishments of a twisted dragon in the top right, high contrast, 8k, RPG card texture.', 'Card texture: Inspired by Stephan Martinière's art style and A Song of Ice and Fire, a meticulously detailed castle silhouette against a frigid landscape, Northern-inspired knotwork at the corners, the matte finish brings out the texture of the snow, dark fantasy, 8k, ArtStation winner. 
+    Each texture description should be interpreting the text fragment in a different way. taking it to a different direction - answering the question which genre or subgenre this fragment can relate to. the direction can be influenced by other related cultural influences, whether it be books, movies, myths etc. but in a surprising various options. 
+    The textures should have a keyword format, utilizing terms such as RPG, cinematic, ArtStation, ArtStation winner, grainy, embellishments, decorative styles, etc. Note that these descriptions are for the texture of a card, not an illustration. They should provide an engaging aesthetic complement to the story continuation. For example, 'Card texture: Inspired by Brom's art style and Dark Sun, a desert of sizzling oranges and browns, distressed edges give a sense of scorched earth, embellishments of a twisted dragon in the top right, high contrast, 8k, RPG card texture.', 'Card texture: Inspired by Stephan Martinière's art style and A Song of Ice and Fire, a meticulously detailed castle silhouette against a frigid landscape, Northern-inspired knotwork at the corners, the matte finish brings out the texture of the snow, dark fantasy, 8k, ArtStation winner. 
     make the card texture subtle and so the influence. tending into more abstract or symbolic. archetypal
     please return the results as a JSON list of strings (so it would not fail on JSON.parse(output) )`
 }
@@ -211,7 +212,7 @@ function generateFragmentsBeginnings(numberOfFragments = 20) {
 
 
 
-function generagenerateContinuationPrompt(userText = null) {
+function generateContinuationPrompt(userText = null) {
     userTextLength = userText.split(/\s+/).length
     const prompt = `"Fragment": "${userText}"
  
@@ -337,6 +338,7 @@ async function directExternalApiCall(prompts, max_tokens = 2500) {
 
 module.exports = {
     directExternalApiCall,
-    generateContinuationPrompt
+    generateContinuationPrompt,
+    generatePrefixesPrompt2
 };
 

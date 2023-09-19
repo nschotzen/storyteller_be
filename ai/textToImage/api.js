@@ -1,4 +1,6 @@
 const fetch = require('node-fetch');
+const { generateAsync } = require('stability-client')
+require('fs');
 
 // Define the API options
 const API_TYPES = {
@@ -6,7 +8,7 @@ const API_TYPES = {
     url: 'https://openai.com/api/textToImage/stable_diffusion',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer <Your OpenAI Key>'
+      'Authorization': 'Bearer <sk-12DRm1jAa3In5XalwbVahkxBK5VhWzAqKc7KDmBsBodSxCnE>'
     }
   },
   // Add other APIs here as needed...
@@ -24,6 +26,23 @@ function responseToTextureModels(response) {
   }));
 }
 
+
+async function textToImage(prompt, samples=1){
+  try {
+    const { res, images } = await generateAsync({
+      prompt: `${prompt}`,
+      apiKey: 'sk-12DRm1jAa3In5XalwbVahkxBK5VhWzAqKc7KDmBsBodSxCnE',
+      width: 512,
+      height: 512,
+      steps: 10,
+      samples: samples,
+      engine: 'stable-diffusion-xl-1024-v1-0'
+    })
+    console.log(images)
+  } catch (e) {
+    // ...
+  }
+};
 
 async function generateTextureImgFromPrompt(prompt, apiKey, apiOptions = {}, samples=4) {
   // Merge with default options
@@ -67,6 +86,7 @@ async function generateTextureImgFromPrompt(prompt, apiKey, apiOptions = {}, sam
 
 module.exports = {
   generateTextureImgFromPrompt,
+  textToImage
 };
 
 

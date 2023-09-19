@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
-const { directExternalApiCall, generatePrefixesPrompt } = require("./ai/openai/utils.js")
+const { directExternalApiCall, generatePrefixesPrompt2 } = require("./ai/openai/utils.js")
 const {  generateTextureImgFromPrompt } = require("./ai/textToImage/api.js")
 
 
@@ -52,7 +52,7 @@ const {  generateTextureImgFromPrompt } = require("./ai/textToImage/api.js")
 let userText = "The rain soaked their clothes, turning the earth to mud.";
 let texture = "Card texture: 'Janny Wurts's Wars of Light and Shadow, vibrant magic symbols, color-splashed flourishes, epic fantasy, grainy, 8k, ArtStation winner.";
 
-const prefixesPrompt = generatePrefixesPrompt(userText, texture, 4, true);
+const prefixesPrompt = generatePrefixesPrompt2(userText, texture, 4, true);
 
 console.log(prefixesPrompt);
 
@@ -83,6 +83,8 @@ app.post('/api/storytelling', async (req, res) => {
     try {
         console.log('req req ')
       const { userText, textureId } = req.body;
+      texturePrompts = [`Card texture: Inspired by the Nordic sagas and the ambiance of The Witcher series, cool steel grays contrast with deep crimson stains. Ancient runic patterns glow faintly, like long-forgotten prophecies, with touches of worn leather in the corners. The texture embodies a sense of melancholy and valiance, with a finely-grained, parchment-like surface, exuding archetypal warrior grit, 8k, ArtStation winner`]
+      const boo = await generateTextureImgFromPrompt(texturePrompts[0])
       const texturePrompt = textureId ? await getTexturePromptFromDatabase(textureId) : null;
       const gpt4Prompt =  generatePrefixesPrompt(userText, texturePrompt);
       const gpt4Response = await directExternalApiCall(gpt4Prompt);
@@ -92,6 +94,7 @@ app.post('/api/storytelling', async (req, res) => {
       const prefixes = getResponsePrefixes(gpt4Response);
   
       // Generating texture images from prompts
+      
       const textureImages = await Promise.all(texturePrompts.map(generateTextureImgFromPrompt));
   
       // Sending the result back to the client
@@ -128,7 +131,6 @@ app.get('/api/cards', async (req, res) => {
         for (let i = 0; i < n; i++) {
             
             const textures = await getTextureFiles(folderNumber);
-            const textureIndex = Math.floor(Math.random() * textures.length);
 
             const prompts = require(`./assets/textures/${folderNumber}/prompts.json`);
             // console.log(JSON.stringify(prompts))
