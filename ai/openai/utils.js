@@ -1,8 +1,8 @@
-const { OpenAIApi, Configuration } = require('openai');
+const { OpenAI } = require('openai');
 
 
 const OPENAI_API_KEYS = [
-    "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"
+    "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"
 ];
 
 const OPENAI_API_KEYS_FREE = [
@@ -32,11 +32,7 @@ function chooseApiKey() {
 }
 
 function getOpenaiClient() {
-    const configuration = new Configuration({
-        // apiKey: process.env.OPENAI_API_KEY,
-        apiKey: chooseApiKey(),
-    });
-    return new OpenAIApi(configuration);
+    return new OpenAI({apiKey: chooseApiKey()});
 }
 
 
@@ -112,6 +108,7 @@ function generate_texture_by_fragment(fragment){
     The textures should have a keyword format, utilizing terms such as RPG, cinematic, ArtStation, ArtStation winner, grainy, embellishments, decorative styles, etc. Note that these descriptions are for the texture of a card, not an illustration. They should provide an engaging aesthetic complement to the story continuation. For example, 'Card texture: Inspired by Brom's art style and Dark Sun, a desert of sizzling oranges and browns, distressed edges give a sense of scorched earth, embellishments of a twisted dragon in the top right, high contrast, 8k, RPG card texture.', 'Card texture: Inspired by Stephan Martinière's art style and A Song of Ice and Fire, a meticulously detailed castle silhouette against a frigid landscape, Northern-inspired knotwork at the corners, the matte finish brings out the texture of the snow, dark fantasy, 8k, ArtStation winner. 
     make the card texture subtle and so the influence. tending into more abstract or symbolic. archetypal
     please return the results as a JSON list of strings (so it would not fail on JSON.parse(output) )`
+    return [{ role: "system", content: prompt }];
 }
 
 
@@ -151,10 +148,12 @@ function generateExpertList(paragraph) {
 
 
 function generateFragmentsBeginnings(numberOfFragments = 20) {
-    const prompt = `Instructions: Generate ${numberOfFragments} distinct sentence fragments as if they're taken from within a novel, to initiate a collaborative storytelling game. These fragments should be atmospheric, thought-provoking, and varied in length, ranging from just a 3 words up to a sentence of 15 words. They should provide a palpable sense of setting, characters, or events, enticing participants to continue the narrative in their unique style.
-    the fragments are taken from the middle of a book...they don't have to be dramatic, actually, they're aren't so dramatic, just somehow encapsulate the atmosphere of the book and its unique universe. no need to showoff. be as concrete as possible. so anyone who reads the fragments would feel as if they're really taken from within a book. remember these sentences are fragments, they're not standing alone. but they should have some echo..the essence of the storytelling.
+    const prompt = `Instructions: Generate ${numberOfFragments} distinct sentence fragments as if they're taken from within a fantasy/adventure/sci-fi novel influenced by two different in genre esoteric acclaimed fantasy novels in the broadest sense of the word. and an esoteric mature RPG game system. when we see the fragments we wouldn't be able to trace back those influences, to initiate a collaborative storytelling game. These fragments should be atmospheric, thought-provoking, and varied in length, ranging from just a 3 words up to a sentence of 15 words. They should provide a palpable sense of setting, characters, or events, enticing participants to continue the narrative in their unique style.
+    the fragments are taken from the middle of a book...they don't have to be dramatic, actually, they're aren't so dramatic, no need to showoff. be as concrete as possible. so anyone who reads the fragments would feel as if they're really taken from within a book. remember these sentences are fragments, they're not standing alone. but they should have some echo..the essence of the storytelling.
+verbs that invite actions, imagery that is concrete and invites personal interpretation is most desired.
     
     some fragments work better when they're shorter and some when they're not like:
+"after a long steep climb they finally reached the plateaue" - it's concrete and invites continuation.
     "It was well after midnight as the"
     ""you're surrounded!"
     "she finally made it to the sandy beach. standing on solid ground after such a long swim"
@@ -165,28 +164,28 @@ function generateFragmentsBeginnings(numberOfFragments = 20) {
     these are also good examples:
     3-6 words fragments:
     
-    "As the clock struck midnight,"
-    "Beneath the ancient willow tree,"
-    "Along the cobblestone path,"
-    "In the dim candlelight,"
-    "After the final note,"
-    "Under the weight of their secrets,"
+    "it was almost sunset as they finally reached" (it invites continuation)
+    ""you must run now! don't stop until you cross the white river!"
+    "the roads were muddy and they advanced slowly, if that wasn't enough"
+    "In the dim candle lit cabin,"
+    "why do they choose to follow my lead? over and over again. I keep failing them"
+    "the cave was empty except for some dry wood"
     7-10 words fragments:
     
     "Her trembling hands clutching the locket,"
-    "Across the misty lake, the silhouette of a tower,"
+    "Across the misty lake, the silhouette of a tower"
     "A trail of scorched earth leading to,"
     "The torn map, barely readable, showed,"
     "In the distance, the low rumble of approaching thunder,"
     "The rusty padlock on the door cracked open,"
     11-13 words fragments:
     
-    "She peered into the murky depths of the well, seeing,"
-    "As the embers in the fireplace died out, they whispered,"
+    "She peered into the murky depths of the well, "
+    "As the embers in the fireplace were slowly dying out, Marla began telling her story"
     "The parchment crackled in his grip, the seal unbroken,"
     "In the deserted square, the statue of the founder pointed towards,"
-    "The battered suitcase, filled with mementos and memories, lay open,"
-    "Through the shimmering heat of the desert, an oasis beckoned,"
+    "nobody would imagine what's inside that battered suitcase. she crackled,"
+    
 
     
     please make use of various writing styles . use direct speech, journals, descriptions...be as concrete as possible.
@@ -195,9 +194,9 @@ function generateFragmentsBeginnings(numberOfFragments = 20) {
     
     "Across the wind-blasted moor, the lonesome howl of a wolf" might send a chill down the spine of participants, suggesting a horror or supernatural theme. Or "In a velvet pouch, seven ancient coins, all mysteriously warm" might evoke a sense of adventure or historical intrigue.
     
-    The fragments should cover a diverse array of themes, styles, and settings, subtly nudging the storytellers towards potential story paths without enforcing a strict direction. Use tangible imagery while avoiding excessive drama. various writing genres. like journals: "Captain's log: No wind, 15th day in a row. the crew is restless." descriptive: "it was almost sunset as they finally reached the top". direct speech: "Leave! each fragment should present a compelling piece of the narrative puzzle.
+    The fragments should cover a diverse array of themes, styles, and settings, subtly nudging the storytellers towards potential story paths without enforcing a strict direction. but the grammatical structure of the sentence should easily invite continuation. without much effort. Use tangible imagery while avoiding excessive drama. various writing genres. like journals: "Captain's log: No wind, 15th day in a row. the crew is restless." descriptive: "it was almost sunset as they finally reached the top". direct speech: "Leave! each fragment should present a compelling piece of the narrative puzzle.
     
-    Our ultimate goal is to stimulate creativity and encourage engaging interaction among the participants. The fragments should inspire them to explore various narrative routes, each contributing to the unfolding of a unique, collective story. A powerful fragment like "Diary entry: Tonight, the shadows whispered back" might ignite a flurry of imaginative responses. And remember, a good story doesn't need to answer all questions—it invites its listeners to venture into the realm of 'What If?'.
+    Our ultimate goal is to stimulate creativity and encourage engaging interaction among the participants. The fragments should inspire them to explore various narrative routes, each contributing to the unfolding of a unique, collective story. A powerful fragment like "Diary entry: The shadows are back, tonight. " might ignite a flurry of imaginative responses. And remember, a good story doesn't need to answer all questions—it invites its listeners to venture into the realm of 'What If?'. always prefer concrete tangible imagery instead of vague generic abstract one. be specific!!!! 
 
     Be subtle yet inspiring, avoid cliches. dare to be specific. very specific and bold. dare to be influenced by famous writers and their style, different genres, eras, and atmosphere. dare to visit a very concrete momen
     
@@ -206,13 +205,73 @@ function generateFragmentsBeginnings(numberOfFragments = 20) {
     ${Math.round((numberOfFragments - 2) / 3)} results 11-13 words
     2 results 14-15 words.
     
-    return the results as a JSON list of fragment strings, and return that only. so it could be parsed easily in a code! (otherwise JSON.parse(res) would fail).`;
+    return the results as a JSON list of fragment strings, and return that only. so it could be parsed easily in a code! (otherwise JSON.parse(res) would fail).;
+    make them concrete, and tangible, rooted in senses, and devoid of interpretation. show don't tell. don't be afraid to use names, have a concrete description of items, places, people. you can incorporate monologues, dialogues. make the fragments rooted in somewhere. and don't waste words that mean nothing and only sound smart or flashy. don't waste the readers' time!`;
+    return [{ role: "system", content: prompt }];
 
 }
 
+function generateContinuationPrompt(userText= null){
+    userTextLength = userText.split(/\s|/).length
+    const prompt = `-- Fragment Start:
+    \` ${userText}\` --- Fragment End
+    
+    Instructions:
+Look at this fragment. I want you to ask interesting WH questions about ti. ask a few questions. on these questions ask sub questions. 
+I want you to pick those subquestions and have some "idea" about the answer. not the full answer but an "idea".
+incorporate that "ideas" and let them slowly and subtly materialize into the fragment by continuing the narrative. do it through gestures, actions, and the environment, through tangible sensual imagery, by showing NOT by telling us. concrete and wry, and accurate. refrain from any general or abstract descriptions, that should serve as an ambient. stick to the tangible facts.
+please generate 8 different variations answering the WH questions differently.
+You can only add 17-19 words for each continuation, making sure they fit seamlessly as a progressing narrative. they shouldn't feel as if they're imposed on the existing text.
+you are not supposed to give the full answer to the question, but start paving a way into materializing the question and the necessity to answer it within the narrative.
+The main aim is to inspire the reader to naturally continue the story on their own, evoking a sense of real-time unfolding. Your continuations should inspire creative writing, be tangible in imagery, and sensuous in detail. It should read like a genuine unfolding narrative.
+be concrete! never use phrases like "eyes whispering tales" eyes don't whisper tales it's just a way to evade saying something concrete
+Output Format:
+Your response should be a JSON array of objects with the following format:
+{
+  "continuation": "your continuation",
+  "chosen_entities": [list of chosen entities], 
+"chosen_sub_questions":[list of relevant sub questions]
+}
 
+Important:
+Ensure the story unfolds naturally. The focus is on evoking a genuine narrative progression, making the reader feel as if they are reading an authentic novel. use only concrete sensory descriptions. refrain from explaining or generic imagery. be concrete! wry. imagine a strict writer criticizing your work. it should feel like a real story unfolding. tangible, concrete, based on facts and not on interpretations. show don't Tell. focus on concrete seneory descriptions, rather on abstract or generic ones.  be descriptive and thorough but always concrete. tangible. even wry. be specific. not abstract. don't use metaphors unless they're ABSOLUTELY ESSENTIAL. imagine you're john steinback, hemmingway, raymond carver combined with the George R.  R. Martin. Do not impose the entities. you're getting graded as to how seamless and natural the continuation feels.  DON't IMPOSE THE CONTINUATION. make it seem natural, as part of the unfolding!! you don't have to introduce a new one... also, it's perfectly ok to end a continuation in the middle...be subtle. be inspiring. make it seem real.`
+    return [{ role: "system", content: prompt }];
+}
 
-function generateContinuationPrompt(userText = null) {
+function generateContinuationPromptOld33(userText= null){
+    userTextLength = userText.split(/\s+/).length
+    const prompt = `"Fragment": "${userText}"
+    "Instructions":
+    Welcome to our collaborative storytelling challenge! Your mission, alongside the AI, is to creatively expand upon a given fragment from an unknown novel.
+    
+    Placement & Word Count: Each turn, you can add, modify, or replace a segment of up to ${Math.round(userTextLength * 1.61803398875) - userTextLength} words, but not fewer than 4. please vary in the lengths you add to each fragment. you're allowed to make only cosmetic changes to the existing fragment words. These alterations can be placed at the beginning, within, or at the end of the fragment. If a fragment ends in a manner that naturally calls for continuation (e.g., a preposition), please ensure you pick up from there. Provide 5 variations, please.
+    
+    Contextual Additions: Aim for contextual additions rather than just mere adjectives. For instance, turning "they finally reached the border" 
+    into "they reached the civil-war torn border" adds depth with only a few words. 
+    Subtlety is key! the aim is to continue the story not just a mere cosmetic editing. 
+    you're working on the story together!! the player should feel a progress...as if the story is unfolding before his eyes.
+    
+    Seamless Integration: Remember, other participants are also playing this game with different fragments. At the game's end, participants will attempt to identify the "seams" where contributions transition. The goal is to make these transitions as seamless as possible. The more natural and integrated your addition, the higher the score!
+    
+    Narrative Integrity: The fragment is a piece of a larger universe. Ensure your contributions fit naturally into the existing setting. Avoid introducing drastic new concepts or events that could disrupt the narrative flow. Your changes should hint at details, provide context, or gently guide the narrative.
+    
+    Variations: The AI will return five distinct variations of the fragment. Each one will approach the narrative differently. These variations can be inserted at the start, middle, or importantly, extend the narrative at the end.
+    
+    Example: For the fragment "the gate was almost...", variations might include:
+    
+    "In the monastery, the gate was almost..."
+    "The gate, wrapped in ivy, was almost..."
+    "The gate was almost lost in the evening mist..."
+    "Except for the ivy, the gate was almost..."
+    "Almost obscured, the gate was..."
+    Output Format: A JSON array of strings of variation. for easy parsing by JSON.parse.
+    the ONLY ouput should be that JSON array of strings.
+    Return ONLY the JSON array, without any explanations or descriptions!!'`
+    return [{ role: "system", content: prompt }];
+    
+}
+
+function generateContinuationPromptOlder(userText = null) {
     userTextLength = userText.split(/\s+/).length
     const prompt = `"Fragment": "${userText}"
  
@@ -320,14 +379,16 @@ function generatePrefixesPrompt2(userText = null, texture = null, variations = 4
 
 
 
-async function directExternalApiCall(prompts, max_tokens = 2500) {
-    const completion = await getOpenaiClient().createChatCompletion({
-        ...openAIConfig,
+async function directExternalApiCall(prompts, max_tokens = 2500, ) {
+    const completion = await getOpenaiClient().chat.completions.create({
         max_tokens,
+        model: 'gpt-4',
         messages: prompts,
+        temperature : 1.00,
+        presence_penalty: 0.0
     });
 
-    const rawResp = completion.data.choices[0].message.content.replace(
+    const rawResp = completion.choices[0].message.content.replace(
         /(\r\n|\n|\r)/gm,
         ""
     );
@@ -339,6 +400,8 @@ async function directExternalApiCall(prompts, max_tokens = 2500) {
 module.exports = {
     directExternalApiCall,
     generateContinuationPrompt,
-    generatePrefixesPrompt2
+    generatePrefixesPrompt2,
+    generateFragmentsBeginnings,
+    generate_texture_by_fragment
 };
 

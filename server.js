@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
-const { directExternalApiCall, generatePrefixesPrompt2 } = require("./ai/openai/utils.js")
-const {  generateTextureImgFromPrompt } = require("./ai/textToImage/api.js")
+const { directExternalApiCall, generatePrefixesPrompt2, generateFragmentsBeginnings, generateContinuationPrompt } = require("./ai/openai/utils.js")
+const {  generateTextureImgFromPrompt, generateTexturesFromPrompts } = require("./ai/textToImage/api.js")
 
 
 
@@ -79,12 +79,10 @@ return response.prefixes;
 }
   
 
-app.post('/api/storytelling', async (req, res) => {
+app.post('/api/storytellingOld', async (req, res) => {
     try {
         console.log('req req ')
       const { userText, textureId } = req.body;
-      texturePrompts = [`Card texture: Inspired by the Nordic sagas and the ambiance of The Witcher series, cool steel grays contrast with deep crimson stains. Ancient runic patterns glow faintly, like long-forgotten prophecies, with touches of worn leather in the corners. The texture embodies a sense of melancholy and valiance, with a finely-grained, parchment-like surface, exuding archetypal warrior grit, 8k, ArtStation winner`]
-      const boo = await generateTextureImgFromPrompt(texturePrompts[0])
       const texturePrompt = textureId ? await getTexturePromptFromDatabase(textureId) : null;
       const gpt4Prompt =  generatePrefixesPrompt(userText, texturePrompt);
       const gpt4Response = await directExternalApiCall(gpt4Prompt);
@@ -108,18 +106,60 @@ app.post('/api/storytelling', async (req, res) => {
     }
   });
   
+app.post('/api/storytelling', async (req, res) => {
+  try {
+      console.log('req req ')
+      console.log('HELLLOOOO')
+      const { userText, textureId } = req.body;
+      const prompts = generateContinuationPrompt(userText)
+      const prefixes = await directExternalApiCall(prompts);
+      // const prefixes = ['continue 1', 'continue 2', 'continue 1', 'continue 2', 'continue 1', 'continue 2']
+      // Sending the result back to the client
+      console.log(JSON.stringify(prefixes))
+      res.json({
+        prefixes : prefixes.map((e) => {return `${userText} ${e.continuation}`})
+      });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
+
+app.post('/api/generateTextures', async (req, res)=> {
+  const cardsMock = [{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_0/0.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":2867},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_1/1.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":10726},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_2/2.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":51101},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_3/3.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":52179}]
+
+  // const fragment = req.body.userText || null;
+  // const textures = await generateTexturesFromPrompts(fragment);
+  // const cards = textures.map((texture) => { 
+  //   return {
+  //     url: `${texture}`,
+  //     cover: "", // Add logic for cover
+  //     title:  "working title",
+  //     fontName: "Arial ",
+  //     fontSize:  "32px",
+  //     fontColor:  "red",
+  //     id: parseInt(Math.random() * 100000)
+  //   }
+  // });
+  res.json({
+    cards: cardsMock
+  });
+})
 
 app.get('/api/prefixes', async (req, res) => {
     const texture = req.query.texture || null;
     const numberOfPrefixes = req.query.numberOfPrefixes || 10; // If number of prefixes is not provided, default to 1
   
-    // const prompts = generatePrefixesPrompt(texture, numberOfPrefixes);
+    // const prompts = generateFragmentsBeginnings(texture, numberOfPrefixes);
     // const prefixes = await directExternalApiCall(prompts);
-    const prefixes = ["my first prefix", "my second", "my third prefix", "my fourth"]  
+    const prefixes = ["it wasn't unusual for them to see wolf tracks so close to the farm, but this one was different  , its grand size imprinting a distinct story on the soft soil","It was almost dark as they finally reached", "she grasped her amulet strongly, as the horses started gallopping", 
+    `Run! Now! and don't look back until you reach the river`, "I admit it, seeing the dark woods for the first time was scary"]  
     console.log(`returning prefixes ${prefixes}`)
     res.json(prefixes);
   });
+
+  
   
 
 app.get('/api/cards', async (req, res) => {
@@ -130,7 +170,9 @@ app.get('/api/cards', async (req, res) => {
         const folderNumber = 31//Math.floor(Math.random() * 33) + 1;
         for (let i = 0; i < n; i++) {
             
-            const textures = await getTextureFiles(folderNumber);
+          const textures = await getTextureFiles(folderNumber);
+          const textureIndex = Math.floor(Math.random() * textures.length);
+
 
             const prompts = require(`./assets/textures/${folderNumber}/prompts.json`);
             // console.log(JSON.stringify(prompts))
