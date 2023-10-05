@@ -2,7 +2,7 @@ const { OpenAI } = require('openai');
 
 
 const OPENAI_API_KEYS = [
-    "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"
+    "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"
 ];
 
 const OPENAI_API_KEYS_FREE = [
@@ -103,11 +103,95 @@ function generateMasterCartographerChat(paragraph) {
 }
 
 function generate_texture_by_fragment(fragment){
+    const prompt =`Extrapolate a universe essence by a fragment challenge:
+    look at  the following scene: 
+    "${fragment}"
+
+I want this scene to define a backside for a virtual RPG set of cards. 
+this description is a mere fragment from a VAST universe. 
+
+the backside of the deck is a texture.
+ I want you to define that texture, after analyzing the scene, and finding cultural clues, geographical references that would inspire selection of pallete, motiffs, genres and subgenres
+ and also define and examine pivotal terms, names, locations that could help you interpret this scene and set it in a contextual framework.    drawing inspiration from different genres or sub-genres and a range of cultural influences like books, movies, myths, and beyond. This fusion should weave seamlessly, forming a 'new universe' with fresh, yet familiar undertones. but they should all fit into the pivots found in analyzing the scene. 
+    Articulate the blend clearly, weaving in the details and emotions of the inspirations rather than just naming them. For example, instead of merely stating 'Lovecraft meets Tibetan Thangka', describe how the tentacled abyss might intertwine with sacred gold-outlined designs. remember, it's the backside of the card which is part of a whole deck of cards from this universe. all these backsides are variations on each other. and they all come in different categories: People, places, items, skills, events...etc. 
+    it's when the player turning the card that they see what's concretely in on that card. 
+    So the textures are more vague, general, capturing the essence of the universe. 
+    Use keyword-formatting emphasizing terms like RPG, cinematic, ArtStation, ArtStation winner, grainy, embellishments, flourishes decorative styles, and more.
+    consider using abstract, or semi abstract as a key word, if you think the overall description is too concretely based on the existing fragment. you can dare and be archetypal, mythical, symbolical
+    Be exclusively designed for card textures reminiscent of an RPG card's backside. Avoid illustrations or specific scene descriptions.
+    Integrate design elements like embellishments, filigree, motifs, flourishes, and ornaments.
+    Favor abstract, symbolic, and archetypal designs, and don't shy away from esoteric sub-genres or niche influences.
+    Your provided description will be input for a TextToImage API to generate card texture images, so ensure clarity and detail.
+    please provide 4 different variations of textures that could fit to that fragment and add 
+    a suitable google font for eahc texture.
+    
+    For guidance, consider these examples:
+    
+    'Card texture: Pulling from Brom's art style merged with Dark Sun atmospheres, visualize a desert of sizzling oranges and browns, with distressed edges evoking scorched earth, and the corner embellishments shaped like twisted dragons, high contrast, 8k, RPG essence.'
+    'Card texture: Melding Stephan Martinière's vision with A Song of Ice and Fire's chill, picture a detailed silhouette of a castle set against a frosty backdrop, with intricate Northern-inspired knotwork designs accentuating the corners, matte finish for tactile richness, dark fantasy aura, 8k, ArtStation champion.'
+    
+    Outputs should be formatted as a JSON list  of objects: [{prompt:String, font:skill}]  for compatibility with JSON.parse.
+    `
+    return [{ role: "system", content: prompt }];
+}
+
+function generate_texture_by_fragmentGood(fragment){
+    const prompt =`look at  the following scene: 
+    "${fragment}"
+
+I want this scene to define a backside for a virtual RPG set of cards. 
+this description is a mere fragment from a VAST universe. 
+
+the backside of the deck is a texture. I want you to define that texture, after analyzing the scene, and finding cultural clues, pivotal terms, names, locations that could help you interpret this scene and set it in a contextual framework.    drawing inspiration from different genres or sub-genres and a range of cultural influences like books, movies, myths, and beyond. This fusion should weave seamlessly, forming a 'new universe' with fresh, yet familiar undertones. but they should all fit into the pivots found in analyzing the scene. 
+    Articulate the blend clearly, weaving in the details and emotions of the inspirations rather than just naming them. For example, instead of merely stating 'Lovecraft meets Tibetan Thangka', describe how the tentacled abyss might intertwine with sacred gold-outlined designs. remember, it's the backside of the card which is part of a whole deck of cards from this universe. all these backsides are variations on each other. and they all come in different categories: People, places, items, skills, events...etc. 
+    it's when the player turning the card that they see what's concretely in on that card. So the textures are more vague, general, capturing the essence of the universe. 
+    Use keyword-formatting emphasizing terms like RPG, cinematic, ArtStation, ArtStation winner, grainy, embellishments, flourishes decorative styles, and more.
+    consider using abstract, or semi abstract as a key word, if you think the overall description is too concretely based on the existing fragment. you can dare and be archetypal, mythical, symbolical
+    Be exclusively designed for card textures reminiscent of an RPG card's backside. Avoid illustrations or specific scene descriptions.
+    Integrate design elements like embellishments, filigree, motifs, flourishes, and ornaments.
+    Favor abstract, symbolic, and archetypal designs, and don't shy away from esoteric sub-genres or niche influences.
+    Your provided description will be input for a TextToImage API to generate card texture images, so ensure clarity and detail.
+    
+    For guidance, consider these examples:
+    
+    'Card texture: Pulling from Brom's art style merged with Dark Sun atmospheres, visualize a desert of sizzling oranges and browns, with distressed edges evoking scorched earth, and the corner embellishments shaped like twisted dragons, high contrast, 8k, RPG essence.'
+    'Card texture: Melding Stephan Martinière's vision with A Song of Ice and Fire's chill, picture a detailed silhouette of a castle set against a frosty backdrop, with intricate Northern-inspired knotwork designs accentuating the corners, matte finish for tactile richness, dark fantasy aura, 8k, ArtStation champion.'
+    
+    Outputs should be formatted as a JSON list of strings for compatibility with JSON.parse.
+    `
+    return [{ role: "system", content: prompt }];
+}
+
+function generate_texture_by_fragmentOlder(fragment){
     const prompt = `Generate 4 distinctive descriptions for the texture of a card that corresponds to this text fragment taken from a new unfolding story: "${fragment}" 
     Each texture description should be interpreting the text fragment in a different way. taking it to a different direction - answering the question which genre or subgenre this fragment can relate to. the direction can be influenced by other related cultural influences, whether it be books, movies, myths etc. but in a surprising various options. 
     The textures should have a keyword format, utilizing terms such as RPG, cinematic, ArtStation, ArtStation winner, grainy, embellishments, decorative styles, etc. Note that these descriptions are for the texture of a card, not an illustration. They should provide an engaging aesthetic complement to the story continuation. For example, 'Card texture: Inspired by Brom's art style and Dark Sun, a desert of sizzling oranges and browns, distressed edges give a sense of scorched earth, embellishments of a twisted dragon in the top right, high contrast, 8k, RPG card texture.', 'Card texture: Inspired by Stephan Martinière's art style and A Song of Ice and Fire, a meticulously detailed castle silhouette against a frigid landscape, Northern-inspired knotwork at the corners, the matte finish brings out the texture of the snow, dark fantasy, 8k, ArtStation winner. 
     make the card texture subtle and so the influence. tending into more abstract or symbolic. archetypal
     please return the results as a JSON list of strings (so it would not fail on JSON.parse(output) )`
+    return [{ role: "system", content: prompt }];
+}
+
+
+function generate_texture_by_fragmentOld(fragment){
+    const prompt = `Generate 4 standalone card texture descriptions based on the atmospheric essence captured by the following scene: 
+    --sceneStart ${fragment} ---sceneEnd
+    Each description should:
+    
+    Interpret the scene uniquely, drawing inspiration from different genres or sub-genres and a range of cultural influences like books, movies, myths, and beyond. This fusion should weave seamlessly, forming a 'new universe' with fresh, yet familiar undertones.
+    Articulate the blend clearly, weaving in the details and emotions of the inspirations rather than just naming them. For example, instead of merely stating 'Lovecraft meets Tibetan Thangka', describe how the tentacled abyss might intertwine with sacred gold-outlined designs.
+    Use keyword-formatting emphasizing terms like RPG, cinematic, ArtStation, ArtStation winner, grainy, embellishments, decorative styles, and more.
+    Be exclusively designed for card textures reminiscent of an RPG card's backside. Avoid illustrations or specific scene descriptions.
+    Integrate design elements like embellishments, filigree, motifs, flourishes, and ornaments.
+    Favor abstract, symbolic, and archetypal designs, and don't shy away from esoteric sub-genres or niche influences.
+    Your provided description will be input for a TextToImage API to generate card texture images, so ensure clarity and detail.
+    
+    For guidance, consider these examples:
+    
+    'Card texture: Pulling from Brom's art style merged with Dark Sun atmospheres, visualize a desert of sizzling oranges and browns, with distressed edges evoking scorched earth, and the corner embellishments shaped like twisted dragons, high contrast, 8k, RPG essence.'
+    'Card texture: Melding Stephan Martinière's vision with A Song of Ice and Fire's chill, picture a detailed silhouette of a castle set against a frosty backdrop, with intricate Northern-inspired knotwork designs accentuating the corners, matte finish for tactile richness, dark fantasy aura, 8k, ArtStation champion.'
+    
+    Outputs should be formatted as a JSON list of strings for compatibility with JSON.parse.
+    `
     return [{ role: "system", content: prompt }];
 }
 

@@ -40,15 +40,20 @@ async function textToImage(prompt, samples=1, path){
     const { res, images } = await generateAsync({
       prompt: `${prompt}`,
       apiKey: 'sk-12DRm1jAa3In5XalwbVahkxBK5VhWzAqKc7KDmBsBodSxCnE',
-      width: 512,
-      height: 512,
-      steps: 10,
       samples: samples,
       engine: 'stable-diffusion-xl-1024-v1-0',
-      outDir: path
+      outDir: path,
+      steps: 40,
+      width: 1024,
+      height: 1024,
+      seed: 0,
+      samples: 1,
     })
     console.log(images)
-    return images.map((img) => {return img.filePath})
+    return images.map((img) => {
+      return img.filePath.replace(/^.*\/assets/, '/assets');
+    });
+  
   } catch (e) {
     console.log(e)
   }
@@ -67,7 +72,7 @@ async function generateTextureImgFromPrompt(prompt, apiKey, apiOptions = {}, sam
     panorama: 'no',
     self_attention: 'no',
     upscale: 'no',
-    embeddings_model: 'embeddings_model_id',
+    
     ...apiOptions,
   };
 
@@ -122,9 +127,9 @@ async function generateTexturesFromPrompts(prompt){
       fs.mkdirSync(textureSubfolderPath);
     }
 
-    fs.writeFileSync(path.join(textureSubfolderPath, 'texture_prompt.txt'), texturePrompt);
-  
-    return await textToImage(texturePrompt, 1, textureSubfolderPath);
+    fs.writeFileSync(path.join(textureSubfolderPath, 'texture_prompt.txt'), texturePrompt.prompt);
+    const url = await textToImage(texturePrompt.prompt, 1, textureSubfolderPath);
+    return {url, font: texturePrompt.font}
   }));
   
   

@@ -126,24 +126,32 @@ app.post('/api/storytelling', async (req, res) => {
 });
 
 
-app.post('/api/generateTextures', async (req, res)=> {
-  const cardsMock = [{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_0/0.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":2867},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_1/1.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":10726},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_2/2.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":51101},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_3/3.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":52179}]
+function getRandomCategory() {
+  const items = ["Item", "Skill", "Location", "Character", "Event", "Place of Rest", "Creature", "Landscape", "Climate"];
+  const randomIndex = Math.floor(Math.random() * items.length);
+  return items[randomIndex];
+}
 
-  // const fragment = req.body.userText || null;
-  // const textures = await generateTexturesFromPrompts(fragment);
-  // const cards = textures.map((texture) => { 
-  //   return {
-  //     url: `${texture}`,
-  //     cover: "", // Add logic for cover
-  //     title:  "working title",
-  //     fontName: "Arial ",
-  //     fontSize:  "32px",
-  //     fontColor:  "red",
-  //     id: parseInt(Math.random() * 100000)
-  //   }
-  // });
+
+
+app.post('/api/generateTextures', async (req, res)=> {
+  // const cardsMock = [{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_0/0.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":2867},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_1/1.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":10726},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_2/2.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":51101},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_3/3.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":52179}]
+
+  const fragment = req.body.userText || null;
+  const textures = await generateTexturesFromPrompts(fragment);
+  const cards = textures.map((texture) => { 
+    return {
+      url: `${texture.url}`,
+      cover: "", // Add logic for cover
+      title:  getRandomCategory() ,
+      fontName: texture.font || "Arial ",
+      fontSize:  "32px",
+      fontColor:  "red",
+      id: parseInt(Math.random() * 100000)
+    }
+  });
   res.json({
-    cards: cardsMock
+    cards: cards
   });
 })
 
