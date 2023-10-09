@@ -2,10 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
-const { directExternalApiCall, generatePrefixesPrompt2, generateFragmentsBeginnings, generateContinuationPrompt } = require("./ai/openai/utils.js")
+const { directExternalApiCall, generateMasterCartographerChat, generatePrefixesPrompt2, generateFragmentsBeginnings, generateContinuationPrompt } = require("./ai/openai/utils.js")
 const {  generateTextureImgFromPrompt, generateTexturesFromPrompts } = require("./ai/textToImage/api.js")
 
-
+const storagePath = path.join(__dirname, 'assets/jsonDb', 'chatSessions.json');
 
 // Usage example:
 // let userText = "She cautiously braced herself against the side of the wagon, her hands trembling slightly as she felt the rough wood under her fingertips.";
@@ -131,6 +131,53 @@ function getRandomCategory() {
   const randomIndex = Math.floor(Math.random() * items.length);
   return items[randomIndex];
 }
+
+const getChatSessions = async () => {
+  try {
+      const data = await fs.readFile(storagePath, 'utf8');
+      return JSON.parse(data);
+  } catch (err) {
+      // If file doesn't exist, return an empty object
+      return {};
+  }
+};
+
+const setChatSessions = async (sessions) => {
+  await fs.writeFile(storagePath, JSON.stringify(sessions, null, 2));
+};
+
+app.get('/chatWithMaster', async (req, res) => {
+  const masterName = req.query.masterName || 'Unknown Master';
+  const userInput = req.query.userInput || '';
+  const sessionId = req.query.sessionId || 'Unknown Session';
+  const fragmentText = req.query.fragmentText || '';
+
+  const chatSessions = await getChatSessions();
+  let isNewChat = false;
+  if (!chatSessions[sessionId]) {
+    chatSessions[sessionId] = [];
+    isNewChat = true;
+  }
+
+  // Save user input with role
+  if(userInput)
+    chatSessions[sessionId].push({ role: 'user', content: userInput });
+
+  const previousMessages = chatSessions[sessionId];
+  // Your logic to get the master's response...
+  prompts = generateMasterCartographerChat(fragmentText);
+  if(previousMessages.length > 0)
+    prompts.push(previousMessages)
+  const masterResponse = await directExternalApiCall(prompts);
+  // const masterResponse = `Hello, ${masterName}. Session ID: ${sessionId}. fragment: ${fragmentText} Previous messages: ${previousMessages}. You said: "${userInput}"`;
+
+  // Save master response with role
+  if(masterResponse)
+    chatSessions[sessionId].push({ role: 'system', content: masterResponse });
+  await setChatSessions(chatSessions);
+
+  res.json({ text: masterResponse });
+});
 
 
 

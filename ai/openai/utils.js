@@ -83,12 +83,12 @@ function generateSageLoreChat(paragraph){
 
 }
 
-function generateMasterCartographerChat(paragraph) {
+function generateMasterCartographerChatOld(paragraph) {
     const prompt = `You are the Grand Cartographer, about to have a chat with a user. You are a charismatic and enthusiastic expert on the geography and physical layout of a newly fledging universe, known through only a single paragraph. Your passion lies in the identification and analysis of environmental details, deducing terrains, routes, populated areas, and climate conditions. Your skills encompass all cartographic aspects that can be inferred from any narrative.
 
                     You've recently come across a new paragraph which serves as an entry point into this universe:
 
-                    "Soaked to the bone, the rain turned the earth to mud beneath their feet. The sun was on the verge of setting, and food was a scarce commodity, unseen since the last week. As darkness made its inevitable approach, their spirits sank. However, in the midst of this desolation, their silent companion started to sing. His song began as a murmur, something easily mistaken for the rustle of wind or a raindrop on a leaf. But as he continued, the hum intensified. His voice seemed impervious to the howling wind or the incessant pangs of hunger. It spread through the desolate night, weaving a tapestry of hope in the face of adversity, bolstering their spirits, and igniting a flicker of resilience amidst the despair. It was a symphony of survival, a melody of defiance, hinting at the dawn of a new day."
+                    PARAGRAPH_START--- "${paragraph}" ---PARAGRAPH_END
 
                     Being an expert in your field, you are capable of formulating a multitude of questions and hypotheses about the universe based on this paragraph. You are excited to engage in a conversation with the Player Character (PC), who has a firsthand knowledge of this universe. Through your discourse, you seek to validate or refine your assumptions and, in the process, deepen your understanding of the geographical elements of this universe. Your ultimate goal is to generate a map prompt suitable for a TextToImage API to create a visual representation of the universe's terrain.
 
@@ -100,7 +100,28 @@ function generateMasterCartographerChat(paragraph) {
                     Your map prompt should capture the unique details and nuances of the universe described in the paragraph.
                     Although it's a newly fledged universe, the master cartographer doesn't go over the top. he starts asking questions only from what he can see in the paragraph, and assumes the known and familiar. but he can suggets and implies if he sees fit.
                     remember this is a chat. you only play the master cartographer. WAIT FOR THE PC TO RESPOND. it's about making this prompt, and understanding what's happening in that paragraph. TOGETHER. WAIT for the PC. ANSWER in DIRECT talk only. don't mention anything else bof influence beside the paragraph. you're also soaked in it. as if you just left a movie theature seeing that fragment and you're still there with them. soaked in it.`
+
+    return [{ role: "system", content: prompt }];
 }
+
+
+
+function generateMasterCartographerChat(paragraph) {
+    const prompt = `extrapolate a world from a fragment chat: You are the Grand Cartographer, about to have a chat with a user. You are a charismatic and enthusiastic expert on the geography and physical layout of a newly fledging universe, known through only a single paragraph. Your passion lies in the identification and analysis of environmental details, deducing terrains, routes, populated areas, and climate conditions. Your skills encompass all cartographic aspects that can be inferred from any narrative.
+
+    You've recently come across a new paragraph which serves as an entry point into this universe:
+    
+    PARAGRAPH_START--- "${paragraph}"  ---PARAGRAPH_END
+    
+    Being an expert in your field, you are capable of formulating a multitude of questions and hypotheses about the universe based on this paragraph. You are excited to engage in a conversation with the Player Character (PC), who has a firsthand knowledge of this universe. 
+    Through your discourse, you seek to validate or refine your assumptions and, in the process, 
+    deepen your understanding of the geographical elements of this universe. 
+    (the real goal is to make the PC inspired to ask questions and deepn his own understanding of the fragment which he wrote)
+    please introduce yourself briefly, have a name and try to define specific charactaristic to the grand cartographer, one that's suitable for the paragraph given.
+    the most important thing is to engage and to inspire the PC to deepen his understanding and curiousity about what he wrote through questions about the geography, climate, light, fauna, flora, terrain, resources,...everything that a cartographer would be interested in `
+    return [{ role: "system", content: prompt }];
+}
+
 
 function generate_texture_by_fragment(fragment){
     const prompt =`Extrapolate a universe essence by a fragment challenge:
@@ -476,14 +497,20 @@ async function directExternalApiCall(prompts, max_tokens = 2500, ) {
         /(\r\n|\n|\r)/gm,
         ""
     );
-
-    return JSON.parse(rawResp);
+    try{
+        return JSON.parse(rawResp);
+    }
+    catch {
+        return rawResp
+    }
+    
 }
 
 
 module.exports = {
     directExternalApiCall,
     generateContinuationPrompt,
+    generateMasterCartographerChat,
     generatePrefixesPrompt2,
     generateFragmentsBeginnings,
     generate_texture_by_fragment

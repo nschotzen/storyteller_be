@@ -120,6 +120,7 @@ async function generateTexturesFromPrompts(prompt){
   const texturePrompts = await directExternalApiCall(generateTexturesPrompt);
   const textures = await Promise.all(texturePrompts.map(async (texturePrompt, index) => {
     // Create a subfolder for the texture
+    texturePrompt.prompt +=  ` archetypal. card Texture. symbolic`
     const textureSubfolderName = `texture_${index}`;
     const textureSubfolderPath = path.join(subfolderPath, textureSubfolderName);
   
