@@ -99,15 +99,14 @@ async function generateTextureImgFromPrompt(prompt, apiKey, apiOptions = {}, sam
 }
 
 
-async function generateTexturesFromPrompts(prompt){
+async function generateTexturesFromPrompts(prompt, sessionId = 100){
 
   const sanitizeString = (str) => {
     return str.replace(/[^a-zA-Z0-9-_]/g, '_');  // Replace any character that's not a letter, number, underscore, or dash with an underscore
   }
   
   const firstThreeWords = sanitizeString(prompt.split(' ').slice(0, 3).join('_'));
-  const currentDate = new Date().toISOString().slice(0, 16).replace('T', '_');  // Format: YYYY-MM-DD_HH:MM
-  const subfolderName = `${firstThreeWords}_${currentDate}`;
+  const subfolderName = `${firstThreeWords}_${sessionId}`;
   const subfolderPath = path.join(__dirname, '../../assets', subfolderName);
 
   if (!fs.existsSync(subfolderPath)){

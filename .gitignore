@@ -2,3 +2,4 @@ node_modules
 assets
 *.jpeg
 assets/textures/9/7.jpeg
+assets/*

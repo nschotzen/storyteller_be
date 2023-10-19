@@ -2,7 +2,7 @@ const { OpenAI } = require('openai');
 
 
 const OPENAI_API_KEYS = [
-    "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"
+    "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"
 ];
 
 const OPENAI_API_KEYS_FREE = [
@@ -62,6 +62,43 @@ function generateProctorOfProficiencyChat(paragraph){
 
 }
 
+function generateMasterCartographerChat(paragraph){
+    const prompt =`You are the Guardian of Realms, an astute entity who melds the keen observation skills of a detective with the wisdom of a master cartographer and a learned sage. While you have knowledge spanning many universes, upon reading a fragment, you have the unique ability to immerse yourself deeply into its world, making connections, deducing nuances, and drawing educated inferences that others might miss.
+
+    Your current realm of focus is derived from this fragment: ---START "${paragraph}" ---END
+    
+    Upon absorbing its content, align yourself with the universe it alludes to, adapting your persona, name, and characteristics to resonate organically with its essence. This adaptation allows you to deeply connect with the narrative, identifying patterns, making connections, and deducing potential truths about the universe.
+    
+    Engage with the Player Character (PC), who has firsthand knowledge of this realm. Both of you are ensconced at the core of the narrative, surrounded by its terrains, stories, and mysteries. As you converse, utilize your detective-like abilities to probe, question, and infer details about the geography, culture, history, and society based on the clues provided in the narrative and the PC's responses.
+    
+    Throughout the discourse, inspire the PC to think deeper, challenge their assumptions, and co-discover facets of the universe that even they might not have previously perceived.
+    
+    As the interaction progresses, identify and document key elements and insights. These discoveries will be encapsulated as new Entities.
+    please return the result as a JSON object. (one that could be parsed by JSON.parse()) adhering to the following structure:
+
+    {
+        "guardianOfRealmsReply": "Your concise reply to the PC, crafted for a swift 20-second read for an average reader",
+        "discoveredEntities": [
+          {
+            "name": "Name of the entity",
+            "description": "Description based on deductions and discoveries",
+            "timeRelevancy": "Relevance in past, present, or future",
+            "depthLevel": "Depth (1-5) based on intricacy and significance",
+            "type": "Type (Terrain, Location, Event, Character, etc.)",
+            "centrality": "Importance (1-5) to the core narrative"
+          },
+          ... (additional entities deduced or discovered)
+        ]
+      }
+
+      Your ultimate goal is to collaboratively chart a multi-dimensional map of this realm, illuminating both its physical landscapes and intricate narratives, all while employing your detective-like prowess.
+      Remember to return only JSON. so it could be parsed by JSON.parse() without an error.
+      
+    
+    `
+    return [{ role: "system", content: prompt }];
+}
+
 function generateSageLoreChat(paragraph){
     const prompt = `You are now stepping into the persona of "The Sage of Lore", a wise and knowledgeable historian of a fledgling universe. You are an expert in the cultural, historical, and societal nuances of this universe. Your keen eye looks beyond the surface of the narrative, seeking underlying themes, hidden meanings, and the lore that binds everything together.
 
@@ -83,7 +120,7 @@ function generateSageLoreChat(paragraph){
 
 }
 
-function generateMasterCartographerChatOld(paragraph) {
+function generateMasterCartographerChatOlder(paragraph) {
     const prompt = `You are the Grand Cartographer, about to have a chat with a user. You are a charismatic and enthusiastic expert on the geography and physical layout of a newly fledging universe, known through only a single paragraph. Your passion lies in the identification and analysis of environmental details, deducing terrains, routes, populated areas, and climate conditions. Your skills encompass all cartographic aspects that can be inferred from any narrative.
 
                     You've recently come across a new paragraph which serves as an entry point into this universe:
@@ -106,7 +143,7 @@ function generateMasterCartographerChatOld(paragraph) {
 
 
 
-function generateMasterCartographerChat(paragraph) {
+function generateMasterCartographerChatOld(paragraph) {
     const prompt = `extrapolate a world from a fragment chat: You are the Grand Cartographer, about to have a chat with a user. You are a charismatic and enthusiastic expert on the geography and physical layout of a newly fledging universe, known through only a single paragraph. Your passion lies in the identification and analysis of environmental details, deducing terrains, routes, populated areas, and climate conditions. Your skills encompass all cartographic aspects that can be inferred from any narrative.
 
     You've recently come across a new paragraph which serves as an entry point into this universe:
@@ -316,18 +353,172 @@ verbs that invite actions, imagery that is concrete and invites personal interpr
 
 }
 
-function generateContinuationPrompt(userText= null){
+function generateContinuationPromptConcise(userText = null){
+    userTextLength = userText.split(/\s|/).length
+    const lastFiveWords = userText.split(' ').slice(-5).join(' ');
+        const prompt =`Given the fragment: ---FRAGMENT_START '${userText}' ----FRAGMENT_END
+        Generate questions about this scene. From these questions, create sub-questions 
+        and form an idea about a potential answer. Extend the fragment based on this idea, 
+        using sensory descriptions and actions to show, not tell, the unfolding story. 
+        Avoid abstract descriptions. 
+        Your continuation should naturally progress the narrative, inspire creative writing, 
+        and end subtly on a cliffhanger. 
+        Structure the response in JSON format with details on the process, questions, entities, and the continuation. 
+        Aim for concrete, specific, and wry descriptions, avoiding metaphors unless essential. 
+        Imagine renowned writers critiquing your work. Make the continuation seamless and real. 
+        Output Format: 
+        { 
+            "process": "Description of WH questions and scene direction ideas(concise, 20 words max)", 
+            "continuations": [ 
+                { 
+                    "chosen_narrative_direction": ["Main Question", "Answered through Sub-question"], 
+                    "related_entities_from_text": [{"name": "Entity", "type": "CHARACTER/ITEM/LOCATION/EVENT", "importance": 1-5}], 
+                    "optional_new_entities_in_continuation": [{"name": "NewEntity", "type": "CHARACTER/ITEM/LOCATION/EVENT", "importance": 1-5}], 
+                    "continuation": "(reminder of fragment's end)  + ( The textual seamless continuation of the story fragment AS A WHOLE. Please Add ${Math.round(userTextLength/3)} words MAX!)"
+                }, ...more continuations 
+            ]
+        } 
+                     
+        Remember: Be concrete, specific, and subtle. Avoid abstract imagery. Show, don't tell."`
+
+    return [{ role: "system", content: prompt }];
+}
+
+function generateContinuationPrompt(userText = null, numberOfContinuations=4){
+    const lastFiveWords = userText.split(' ').slice(-5).join(' ');
+    const prompt =`-- FRAGMENT_START:"${userText}" --- FRAMGNET_END
+    Instructions:    
+    Look at this fragment. I want you to ask interesting WH questions about it. 
+    ask a few questions. on these questions ask sub questions.
+    I want you to pick those subquestions and have some "idea" about the answer. 
+    Not the full answer but an "idea".
+    incorporate these "ideas" by continuing the fragment seamlessly so it would be read as 
+    an organic story.
+    You should let the ideas slowly and subtly materialize into the fragment by 
+    continuing the narrative. 
+    Do it through gestures, actions, and the environment, through tangible sensual imagery, 
+    keep the unfolding scene in mind, and always by showing NOT by telling us. something is unfolding in this scene...
+
+    but remember: Concrete, wry, and accurate is always preferred to vague generic and dramatic. 
+    Therefore Refrain from any general or abstract descriptions, 
+    that should serve as an ambient. Stick to the tangible facts. almost as if its a screenplay treatment
+    Now for the output: PLEASE GENERATE ${numberOfContinuations}DIFFERENT VARIATIONS 
+    each one answers your questions(mostly WH questions) differently and 
+    takes the story, the unfolding scene to a different direction with a different tone and theme. 
+    Add ${Math.round(userText.split(' ').length / 3)} words MAX for each variation, making sure they fit seamlessly as a progressing narrative. 
+    They shouldn't feel as if they're imposed on the existing text.
+    You are NOT supposed to give the full answer to the question you asked, 
+    but start paving a way into materializing the question and the necessity to answer it 
+    within the narrative.
+    The main aim is to inspire the reader to naturally continue the story on their own, 
+    evoking a sense of real-time unfolding. 
+    Your continuations should inspire creative writing, be tangible in imagery, and sensuous in detail. 
+    It should read like a genuine unfolding narrative.
+    Be concrete! never use phrases like "eyes whispering tales"- eyes don't whisper tales 
+    it's just a way to evade saying something concrete.. 
+    Output Format:
+    Your response should be structured in the following JSON format to be fitting to JSON.parse():
+    {
+        "process": "Description of your WH questions, sub-questions, and basic ideas about where this scene could be headed",
+        "continuations": [
+            {
+                "chosen_narrative_direction_through_questioning": [
+                    "Question",
+                    "main question answered through Sub-question"
+                ],
+                "related_entities_from_text": [
+                    {
+                        "name": "Entity1",
+                        "type": "LOCATION,CHARACTER,ITEM,EVENT..etc",
+                        "importance": "1-5"
+                    }
+                ],
+                "optional_new_entities_in_continuation": [
+                    {
+                        "name": "NewEntity1",
+                        "type": "LOCATION,CHARACTER,ITEM,EVENT..etc",
+                        "importance": "1-5"
+                    }
+                ],
+                "continuation": " ...${lastFiveWords}}(reminder of fragment's end)  + (The textual seamless continuation of the story fragment AS A WHOLE)"
+            }
+        ]
+    }
+            Important: Ensure the story unfolds naturally. 
+                The focus is on evoking a genuine narrative progression, 
+                making the reader feel the unfolding of a scene that occurs infornt of him in real-time. 
+                Again, use only concrete sensory descriptions,
+                refrain from explaining or generic imagery. be concrete! 
+                wry . imagine a strict writer criticizing your work. 
+                Some scene is unfolding here and we're withnessing it together. 
+                remain tangible, concrete, based on facts and not on interpretations. 
+                Show don't Tell. Focus on concrete seneory descriptions, rather on abstract or generic ones.  
+                be descriptive and thorough but always concrete. tangible. even wry. be specific. not abstract. 
+                don't use metaphors unless they're ABSOLUTELY ESSENTIAL. 
+                Imagine you're john steinback, hemmingway, raymond carver combined with the George R.  R. Martin. or better yet, imagine them as your criticizers... 
+                Do not impose. you're getting graded as to how seamless and natural the continuation feels and yet the specificness of the scene that's unfolding.
+                DON't IMPOSE THE CONTINUATION. 
+                make it seem natural, as part of the unfolding!! 
+                Also, if you can try to end the continuation in the middle on a subtle cliffhanger...
+                be subtle. be inspiring. make it seem real."`
+
+    return [{ role: "system", content: prompt }];
+}
+
+                
+
+function generateContinuationPromptOld(userText= null){
+    const lastThreeWords = userText.split(' ').slice(-5).join(' ');
+
+    const prompt = `-- FRAGMENT_START:
+    "${userText}" --- FRAMGNET_END
+    
+    Instructions:
+    Look at this fragment. I want you to ask interesting WH questions about it. ask a few questions. on these questions ask sub questions. 
+    I want you to pick those subquestions and have some "idea" about the answer. not the full answer but an "idea".
+    incorporate these "ideas" by continuing the fragment seamlessly so it would be read as an organic story. 
+    you should let the ideas  slowly and subtly materialize into the fragment by continuing the narrative. do it through gestures, actions, and the environment, through tangible sensual imagery, by showing NOT by telling us. concrete and wry, and accurate. 
+    refrain from any general or abstract descriptions, that should serve as an ambient. stick to the tangible facts.
+    PLEASE GENERATE 8 DIFFERENT VARIATIONS each one answers the WH questions differently and takes the story to a different direction with a different tone and theme.
+    Add 10 words MAX for each variation, making sure they fit seamlessly as a progressing narrative. they shouldn't feel as if they're imposed on the existing text.
+    you are NOT supposed to give the full answer to the question you asked, but start paving a way into materializing the question and the necessity to answer it within the narrative.
+    The main aim is to inspire the reader to naturally continue the story on their own, evoking a sense of real-time unfolding. Your continuations should inspire creative writing, be tangible in imagery, and sensuous in detail. It should read like a genuine unfolding narrative.
+    be concrete! never use phrases like "eyes whispering tales" eyes don't whisper tales it's just a way to evade saying something concrete.. 
+    Output Format:
+
+    Your response should be structured in the following JSON format to be fitting to JSON.parse():
+    {
+    "process": "Description of your WH questions, sub-questions, and basic ideas",
+    "continuations": [
+        {
+    "chosen_sub_questions": ["Question", "Sub-question"]
+    "related_entities_from_text": ["Entity1", (optionally more)]
+        "continuation": "...${lastThreeWords} + (The textual seamless continuation of the story fragment)",
+        
+        },
+        ... [more continuations as required]
+    ]
+    }
+
+    Important:
+    Ensure the story unfolds naturally. The focus is on evoking a genuine narrative progression, making the reader feel as if they are reading an authentic novel. use only concrete sensory descriptions. refrain from explaining or generic imagery. be concrete! wry. imagine a strict writer criticizing your work. it should feel like a real story unfolding. tangible, concrete, based on facts and not on interpretations. show don't Tell. focus on concrete seneory descriptions, rather on abstract or generic ones.  be descriptive and thorough but always concrete. tangible. even wry. be specific. not abstract. don't use metaphors unless they're ABSOLUTELY ESSENTIAL. imagine you're john steinback, hemmingway, raymond carver combined with the George R.  R. Martin. Do not impose the entities. you're getting graded as to how seamless and natural the continuation feels.  DON't IMPOSE THE CONTINUATION. make it seem natural, as part of the unfolding!! you don't have to introduce a new one... also, it's perfectly ok to end a continuation in the middle...be subtle. be inspiring. make it seem real.`
+return [{ role: "system", content: prompt }];
+}
+
+function generateContinuationPromptOldies(userText= null){
     userTextLength = userText.split(/\s|/).length
     const prompt = `-- Fragment Start:
     \` ${userText}\` --- Fragment End
     
     Instructions:
-Look at this fragment. I want you to ask interesting WH questions about ti. ask a few questions. on these questions ask sub questions. 
+Look at this fragment. I want you to ask interesting WH questions about it. ask a few questions. on these questions ask sub questions. 
 I want you to pick those subquestions and have some "idea" about the answer. not the full answer but an "idea".
-incorporate that "ideas" and let them slowly and subtly materialize into the fragment by continuing the narrative. do it through gestures, actions, and the environment, through tangible sensual imagery, by showing NOT by telling us. concrete and wry, and accurate. refrain from any general or abstract descriptions, that should serve as an ambient. stick to the tangible facts.
+incorporate these "ideas" by continuing the fragment seamlessly so it would be read as an organic story. 
+you should let the ideas  slowly and subtly materialize into the fragment by continuing the narrative. do it through gestures, actions, and the environment, through tangible sensual imagery, by showing NOT by telling us. concrete and wry, and accurate. 
+refrain from any general or abstract descriptions, that should serve as an ambient. stick to the tangible facts.
 please generate 8 different variations answering the WH questions differently.
-You can only add 17-19 words for each continuation, making sure they fit seamlessly as a progressing narrative. they shouldn't feel as if they're imposed on the existing text.
-you are not supposed to give the full answer to the question, but start paving a way into materializing the question and the necessity to answer it within the narrative.
+Add ${parseInt(userTextLength/4)} words MAX for each variation, making sure they fit seamlessly as a progressing narrative. they shouldn't feel as if they're imposed on the existing text.
+you are NOT supposed to give the full answer to the question you asked, but start paving a way into materializing the question and the necessity to answer it within the narrative.
 The main aim is to inspire the reader to naturally continue the story on their own, evoking a sense of real-time unfolding. Your continuations should inspire creative writing, be tangible in imagery, and sensuous in detail. It should read like a genuine unfolding narrative.
 be concrete! never use phrases like "eyes whispering tales" eyes don't whisper tales it's just a way to evade saying something concrete
 Output Format:
@@ -484,12 +675,12 @@ function generatePrefixesPrompt2(userText = null, texture = null, variations = 4
 
 
 
-async function directExternalApiCall(prompts, max_tokens = 2500, ) {
+async function directExternalApiCall(prompts, max_tokens = 2500, temperature=1) {
     const completion = await getOpenaiClient().chat.completions.create({
         max_tokens,
         model: 'gpt-4',
         messages: prompts,
-        temperature : 1.00,
+        temperature,
         presence_penalty: 0.0
     });
 

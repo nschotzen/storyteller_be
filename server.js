@@ -1,11 +1,33 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs').promises;
+const fsSync = require('fs')
 const path = require('path');
 const { directExternalApiCall, generateMasterCartographerChat, generatePrefixesPrompt2, generateFragmentsBeginnings, generateContinuationPrompt } = require("./ai/openai/utils.js")
 const {  generateTextureImgFromPrompt, generateTexturesFromPrompts } = require("./ai/textToImage/api.js")
 
 const storagePath = path.join(__dirname, 'assets/jsonDb', 'chatSessions.json');
+
+const ensureDirectoryExists = async (dirPath) => {
+  try {
+      await fs.access(dirPath);  // Try accessing the path
+  } catch (error) {
+      if (error.code === 'ENOENT') {
+          // The path doesn't exist, so create the directory
+          await fs.mkdir(dirPath, { recursive: true });  // Using recursive to ensure all nested directories are created
+      } else {
+          throw error;  // Rethrow other errors
+      }
+  }
+};
+
+const writeContentToFile = async (subfolderName, fileName, content)=> {
+  const subfolderPath = path.join(__dirname, '/assets', subfolderName);
+
+  await ensureDirectoryExists(subfolderPath);
+  const rnd = Math.floor(Math.random() * 11);
+  fsSync.writeFileSync(path.join(subfolderPath, `${fileName}${rnd}.json`), content);
+}
 
 // Usage example:
 // let userText = "She cautiously braced herself against the side of the wagon, her hands trembling slightly as she felt the rough wood under her fingertips.";
@@ -106,25 +128,32 @@ app.post('/api/storytellingOld', async (req, res) => {
     }
   });
   
-app.post('/api/storytelling', async (req, res) => {
-  try {
-      console.log('req req ')
-      console.log('HELLLOOOO')
-      const { userText, textureId } = req.body;
-      const prompts = generateContinuationPrompt(userText)
-      const prefixes = await directExternalApiCall(prompts);
-      // const prefixes = ['continue 1', 'continue 2', 'continue 1', 'continue 2', 'continue 1', 'continue 2']
-      // Sending the result back to the client
-      console.log(JSON.stringify(prefixes))
-      res.json({
-        prefixes : prefixes.map((e) => {return `${userText} ${e.continuation}`})
-      });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
+  app.post('/api/storytelling', async (req, res) => {
+    try {
+        const sanitizeString = (str) => {
+          return str.replace(/[^a-zA-Z0-9-_]/g, '_');  // Replace any character that's not a letter, number, underscore, or dash with an underscore
+        }
+      
+        const { userText, textureId, sessionId } = req.body;  
+  
+        const prompts = generateContinuationPrompt(userText);
+        const prefixes = await directExternalApiCall(prompts, 2500, 1.02);
+  
+        const firstThreeWords = sanitizeString(userText.split(' ').slice(0, 3).join('_'));
+        const subfolderName = `${firstThreeWords}_${sessionId}}`;  
+        writeContentToFile(subfolderName, 'prefixes', prefixes)
+    
+  
+        // Sending the result back to the client
+        res.json({
+          prefixes : prefixes.continuations.map((e) => {return `${userText} ${e.continuation}`})
+        });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
 
 function getRandomCategory() {
   const items = ["Item", "Skill", "Location", "Character", "Event", "Place of Rest", "Creature", "Landscape", "Climate"];
@@ -143,14 +172,20 @@ const getChatSessions = async () => {
 };
 
 const setChatSessions = async (sessions) => {
-  await fs.writeFile(storagePath, JSON.stringify(sessions, null, 2));
+  await fs.writeFile(storagePath,sessions);
 };
 
 app.get('/chatWithMaster', async (req, res) => {
+
+  const sanitizeString = (str) => {
+    return str.replace(/[^a-zA-Z0-9-_]/g, '_');  // Replace any character that's not a letter, number, underscore, or dash with an underscore
+  }
   const masterName = req.query.masterName || 'Unknown Master';
   const userInput = req.query.userInput || '';
   const sessionId = req.query.sessionId || 'Unknown Session';
   const fragmentText = req.query.fragmentText || '';
+  const mock = req.query.mock === 'true';
+  
 
   const chatSessions = await getChatSessions();
   let isNewChat = false;
@@ -164,19 +199,28 @@ app.get('/chatWithMaster', async (req, res) => {
     chatSessions[sessionId].push({ role: 'user', content: userInput });
 
   const previousMessages = chatSessions[sessionId];
-  // Your logic to get the master's response...
-  prompts = generateMasterCartographerChat(fragmentText);
-  if(previousMessages.length > 0)
-    prompts.push(previousMessages)
-  const masterResponse = await directExternalApiCall(prompts);
-  // const masterResponse = `Hello, ${masterName}. Session ID: ${sessionId}. fragment: ${fragmentText} Previous messages: ${previousMessages}. You said: "${userInput}"`;
+  if(! mock){
+    prompts = generateMasterCartographerChat(fragmentText);
+    if(previousMessages.length > 0)
+      prompts = prompts.concat(previousMessages)
+    const res = await directExternalApiCall(prompts);
+    // const masterResponse = `Hello, ${masterName}. Session ID: ${sessionId}. fragment: ${fragmentText} Previous messages: ${previousMessages}. You said: "${userInput}"`;
+    const {guardianOfRealmsReply : masterResponse, discoveredEntities} = res
+    const firstThreeWords = sanitizeString(fragmentText.split(' ').slice(0, 3).join('_'));
+    const subfolderName = `${firstThreeWords}_${sessionId}}`;  
+    writeContentToFile(subfolderName, 'prefixes', res)
 
-  // Save master response with role
-  if(masterResponse)
-    chatSessions[sessionId].push({ role: 'system', content: masterResponse });
-  await setChatSessions(chatSessions);
+    // Save master response with role
+    if(masterResponse)
+      chatSessions[sessionId].push({ role: 'system', content: masterResponse });
+    await setChatSessions(chatSessions);
 
-  res.json({ text: masterResponse });
+    res.json({ text: masterResponse });
+  }
+  else{
+    const masterResponse = `Hello, ${masterName}. Session ID: ${sessionId}. fragment: ${fragmentText} Previous messages: ${previousMessages}. You said: "${userInput}"`
+    res.json({ text: masterResponse });
+  }
 });
 
 
@@ -185,7 +229,8 @@ app.post('/api/generateTextures', async (req, res)=> {
   // const cardsMock = [{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_0/0.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":2867},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_1/1.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":10726},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_2/2.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":51101},{"url":"/assets/Shore,_At_last_2023-10-02_21:43/texture_3/3.png","cover":"","title":"working title","fontName":"Arial ","fontSize":"32px","fontColor":"red","id":52179}]
 
   const fragment = req.body.userText || null;
-  const textures = await generateTexturesFromPrompts(fragment);
+  const sessionId = req.body.sessionId 
+  const textures = await generateTexturesFromPrompts(fragment, sessionId);
   const cards = textures.map((texture) => { 
     return {
       url: `${texture.url}`,
