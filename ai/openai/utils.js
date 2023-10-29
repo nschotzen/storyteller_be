@@ -1,7 +1,6 @@
 const { OpenAI } = require('openai');
 
 
-
 const KEYS_TYPE = {
     BALANCE: "BALANCE",
     FREE: "FREE",
@@ -741,6 +740,9 @@ module.exports = {
     directExternalApiCall,
     generateContinuationPrompt,
     generateMasterCartographerChat,
+    generateMasterStorytellerChat,
+    generateMasterStorytellerConclusionChat,
+    askForBooksGeneration,
     generatePrefixesPrompt2,
     generateFragmentsBeginnings,
     generate_texture_by_fragment

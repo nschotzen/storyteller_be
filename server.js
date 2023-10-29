@@ -3,7 +3,8 @@ const cors = require('cors');
 const fs = require('fs').promises;
 const fsSync = require('fs')
 const path = require('path');
-const { directExternalApiCall, generateMasterCartographerChat, generatePrefixesPrompt2, generateFragmentsBeginnings, generateContinuationPrompt } = require("./ai/openai/utils.js")
+const { directExternalApiCall, generateMasterCartographerChat, generatePrefixesPrompt2, generateFragmentsBeginnings, 
+  generateContinuationPrompt, generateMasterStorytellerChat, generateMasterStorytellerConclusionChat, askForBooksGeneration } = require("./ai/openai/utils.js")
 const {  generateTextureImgFromPrompt, generateTexturesFromPrompts } = require("./ai/textToImage/api.js")
 
 const storagePath = path.join(__dirname, 'assets/jsonDb', 'chatSessions.json');
