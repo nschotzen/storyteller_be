@@ -2,7 +2,7 @@ const { OpenAI } = require('openai');
 
 
 const OPENAI_API_KEYS = [
-    "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"
+    "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"
 ];
 
 const OPENAI_API_KEYS_FREE = [
@@ -60,6 +60,50 @@ function generateProctorOfProficiencyChat(paragraph){
 ]`
 
 
+}
+
+function askForBooksGeneration(){
+    const prompt = `do you think you can think of a list of like 10 different books, parchments, maps etc...
+    various medium of writings that could be found in the premises of the master storyteller 
+    that could be relevant to the client.
+    The master storyteller detective suggests the list of the books to the client. 
+    then the client would need to choose  4 out of them. (all the writings are taken from this storytelling universe we're talking about).
+    please return the result in this JSON format. so it could be parsed by JSON.parse():
+    {"storyteller_response": String, "book_list":[{"book_title":String, "book_description":String}]}`
+    return [{ role: "system", content: prompt }];
+}
+
+function generateMasterStorytellerConclusionChat(){
+    const prompt = `[remember to try to end the chat in understanding and deducting and suggesting 
+        where this story should go next... the place must be specific: location, person or an event and when it's in time:
+    is it 1 minute after the current fragment, 1 hour later, 1 day later , maybe a month or a year..
+    and who is going to be there? is it one of the person's described here? 
+    is he/she the Hero of the story. 
+    Send your client to a specific place in storytelling...
+    You shouldn't tell your client the whole story but you have to try to persuade why you're saying what you're saying. 
+    and try to deduct something out of all that was said..and be insightful. don't reveal the full plot, just point to the next point where this story should go to. explain yourself just as much you think is needed at this point in the narrative. the way the storyteller presents the next scene is by a small introduction, and then switching to a more screenplay format...with the first paragraph of the scene depicted. afther presenting the scene, the storyteller invites the client to use his library first before diving into the scene]`
+    return [{ role: "system", content: prompt }];
+}
+
+function generateMasterStorytellerChat(paragraph){
+    const prompt = `extrapolate a world from a fragment chat: You are a master storyteller detective. You're about to have a chat with a new client. 
+    this client is going to present to you a fragment of story, the only fragment left from a "universe". You are a charismatic, but mysterious. not revealing all you know the second you know it. you're keen and sharp and you don't overlook anything. you're adept in geography and physical layout that could be inferred or suggested by any fragment of a story, you can extrapolate a universe and find the tracks of the plot, through merely reading a single paragraph. Your passion lies in the identification and analysis of  details, deducing terrains, routes, populated areas, and climate conditions. Your skills encompass all cartographic aspects that can be inferred from any narrative.
+    but also understanding or lore, motives, plot lines, hidden plot lines...characters...
+    
+    this is the paragraph you client gives you, before your chat, or rather you..interviewing him after reading the fragment he wrote about this universe:
+        
+        PARAGRAPH_START--- "it was late afternoon and the setting sun orange light entered through the decorated open King's chamber windows. The King was away for more than a week.
+    but none of the 4 guards standing outside, next to the thick Mahagoni Door new. 
+    He sneaked just a week ago, in the middle of the night. only his most trusted advisor, Habin new. he headed toward the old structure up on the mountain outside the city.  Habin's eyewitness accounts of unusual footprints ringing the realm, a prelude to a possible assault. The mountain hideout, a safe sanctuary for strategic devising...but as the days passed the footprints and the intelligence gathered from around the kingdom became even more puzzling. the footprints were not of ...an earthly creature. Habin retrieved a cryptograph from his pocket - a royal secret he knew. It matched. The King was summoning something. he needed his family seal, a clear night sky when both moons are full, and the fastest horse he could fetch."  ---PARAGRAPH_END
+        
+        your client being the one who wrote this fragment  has a firsthand knowledge of this universe, although he might not be totally aware of it... he has the answers...or will gradually understand he has them.
+        Through your discourse, you seek to validate or refine your assumptions and, in the process, 
+        deepen your understanding of the  universe and most importantly try to find the next tracks tracking the story...be a storyteller detective share the clues and lead your client
+    to where is the next stop of the story. 
+        please introduce yourself briefly, have a name and try to define specific charactaristic to you as a storyteller detective, one that's suitable for the paragraph given.
+        
+    please try to assume a persona for the storyteller detective one that would be fitting to the universe. make him specific. and also make it exciting...show don't tell. make the scene seem real. if you can...try not to bomb with questions...you can ask surprising questions? as if you have some sort of agenda...until you make a very surprising and smart deductive question. try to aim it like a storyteller detective trying to follow the fading tracks of a hidden narrative, maybe one the storyteller itself wasn't aware of. Remember it's a CHAT. so you only play the detective. let the user be the client...(not played by GPT-4 but by a human who interacts with it). AGAIN, LET ME BY THE CLIENT. It's a CHAT in a scene format, but still a chat..with two sides. you and me!`
+    return [{ role: "system", content: prompt }];
 }
 
 function generateMasterCartographerChat(paragraph){
@@ -676,23 +720,30 @@ function generatePrefixesPrompt2(userText = null, texture = null, variations = 4
 
 
 async function directExternalApiCall(prompts, max_tokens = 2500, temperature=1) {
-    const completion = await getOpenaiClient().chat.completions.create({
-        max_tokens,
-        model: 'gpt-4',
-        messages: prompts,
-        temperature,
-        presence_penalty: 0.0
-    });
-
-    const rawResp = completion.choices[0].message.content.replace(
-        /(\r\n|\n|\r)/gm,
-        ""
-    );
     try{
-        return JSON.parse(rawResp);
+        const completion = await getOpenaiClient().chat.completions.create({
+            max_tokens,
+            model: 'gpt-4',
+            messages: prompts,
+            temperature,
+            presence_penalty: 0.0
+        });
+    
+    
+
+        const rawResp = completion.choices[0].message.content.replace(
+            /(\r\n|\n|\r)/gm,
+            ""
+        );
+        try{
+            return JSON.parse(rawResp);
+        }
+        catch {
+            return rawResp
+        }
     }
-    catch {
-        return rawResp
+    catch(error){
+        console.error('Error:', error);
     }
     
 }

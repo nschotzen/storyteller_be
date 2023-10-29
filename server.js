@@ -175,7 +175,77 @@ const setChatSessions = async (sessions) => {
   await fs.writeFile(storagePath,sessions);
 };
 
+
+
 app.get('/chatWithMaster', async (req, res) => {
+
+  const sanitizeString = (str) => {
+    return str.replace(/[^a-zA-Z0-9-_]/g, '_');  // Replace any character that's not a letter, number, underscore, or dash with an underscore
+  }
+
+  const masterName = req.query.masterName || 'Unknown Master';
+  const userInput = req.query.userInput || '';
+  const sessionId = req.query.sessionId || 'Unknown Session';
+  const fragmentText = req.query.fragmentText || '';
+
+  const chatSessions = await getChatSessions();
+  if (!chatSessions[sessionId]) {
+    chatSessions[sessionId] = [];
+  }
+
+  // Save user input with role
+  if (userInput) {
+    chatSessions[sessionId].push({ role: 'user', content: userInput });
+  }
+
+  const previousMessages = chatSessions[sessionId];
+  
+  if (previousMessages.length <= 4) {
+    const prompts = generateMasterStorytellerChat(fragmentText);
+    const resFromExternalApi = await directExternalApiCall(prompts.concat(previousMessages));
+    const { storyteller_response: masterResponse } = resFromExternalApi;
+
+    // Save master response with role
+    if (masterResponse) {
+      chatSessions[sessionId].push({ role: 'system', content: masterResponse });
+    }
+    await setChatSessions(chatSessions);
+
+    res.json({ text: masterResponse });
+
+  } else if (previousMessages.length === 5) {
+    const conclusionPrompts = generateMasterStorytellerConclusionChat(previousMessages);
+    const resFromExternalApi = await directExternalApiCall(conclusionPrompts);
+    const { storyteller_response: masterResponse } = resFromExternalApi;
+
+    // Save master response with role
+    if (masterResponse) {
+      chatSessions[sessionId].push({ role: 'system', content: masterResponse });
+    }
+    await setChatSessions(chatSessions);
+
+    res.json({ text: masterResponse });
+
+  } else {
+    const bookPrompts = askForBooksGeneration(previousMessages);
+    const resFromExternalApi = await directExternalApiCall(bookPrompts);
+    const { storyteller_response: masterResponse, book_list } = resFromExternalApi;
+
+    // Save master response and book list
+    if (masterResponse) {
+      chatSessions[sessionId].push({ role: 'system', content: masterResponse });
+    }
+    if (book_list && Array.isArray(book_list)) {
+      chatSessions[sessionId].push({ role: 'system', content: 'book_list', data: book_list });
+    }
+    await setChatSessions(chatSessions);
+
+    res.json({ text: masterResponse, books: book_list });
+  }
+});
+
+
+app.get('/chatWithMasterWorking', async (req, res) => {
 
   const sanitizeString = (str) => {
     return str.replace(/[^a-zA-Z0-9-_]/g, '_');  // Replace any character that's not a letter, number, underscore, or dash with an underscore
