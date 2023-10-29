@@ -1,19 +1,7 @@
 const { OpenAI } = require('openai');
 
 
-const OPENAI_API_KEYS = [
-    "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"
-];
 
-const OPENAI_API_KEYS_FREE = [
-    "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",
-    "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",
-    "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",
-    "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",
-    "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",
-    "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",
-    "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",
-];
 const KEYS_TYPE = {
     BALANCE: "BALANCE",
     FREE: "FREE",
