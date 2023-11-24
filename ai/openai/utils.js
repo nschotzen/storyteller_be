@@ -1,6 +1,19 @@
 const { OpenAI } = require('openai');
 
 
+const OPENAI_API_KEYS = [
+    "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"
+];
+
+const OPENAI_API_KEYS_FREE = [
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+];
 const KEYS_TYPE = {
     BALANCE: "BALANCE",
     FREE: "FREE",
@@ -49,6 +62,51 @@ function generateProctorOfProficiencyChat(paragraph){
 
 }
 
+function characterCreationInitialOptions(previousDiscussions=''){
+    const prompt =`you're going to be given a fragment of a narrative cowritten by the storyteller and gpt-4. after that there's a discussion between the master storyteller detective (portrayed by gpt-4) and the storyteller. 
+    it's going to expand on the ideas and theme presented in the initial narrative fragment.
+    there's also a "texture card" that serves as a texttoImage prompt to provide texture for virtual card deck inspired by this fledging universe.
+    and also a list of entities discussed and inferred to by this initial fragment and further discussion.
+    
+    here they are: "${previousDiscussions}"
+    What we aim to do here, is to find a hero. someone who's going to be the PC in this universe who's going to lead us forward in this newly fledged world, its people, places, mysteries and narratives. 
+    the way we're going to do it is through a short interview where you'll be presenting the questions and also give multiple choices for answers.
+    imagine a character sheet in some RPG core game. imagine it as a tree data structure. 
+    I want to be starting with interesting questions regarding the leaves.
+    hmm..for example:
+     a question:
+    "what kind of shoes do you wear?"
+    and present 3 possible directions to the answer. each one suitable for a different direction for a PC.
+    depending on the PC answer you'll provide the next question and the next possible choices. 
+    like:
+    "where did you sleep last night?"
+    a. a small tent in a windswept hill.
+    b. a bunk bed in the barracks
+    c. I fell asleep on the book in the library. 
+    I want the answers to have a glimpse of the universe and provide a window for that character we're slowly building.
+    we're going to build this character through the series of questions.
+    questions like:
+     where do you exercise? 
+    what would you consider a good meal?
+    what kind of shoes are you wearing?
+    best reward ever:
+    I want you to think of great questions that will provide a window to the character:
+    the skills, talents, inventory, attire, attributes. at the end of this 10 questions 
+    I want to be able to construct a character sheet influenced by best storytelling RPG games known.
+     I want you to provide only the first question. and the multiple choices.
+    based on my answer. (wait for me to answer) you'll provide the next question.
+    but an important part of the answer is also the portrayal in term of an illustration. it should be aligned with all other information provided in the fragment, discussion, entities, and texture .
+    you to create the illustrations for the choices that you give.
+    the illustrations should feel the vibe and artistic line that was described here in the texture..but you can expand on it. the illustrations should be on the front side of a card. so they could have embellishments, and artistic flourishes. make it a front side of a virtual card (part of an html and css React app component). oh and another thing. the hero is level 1. he's only starting to be a hero. remember, ask a specific question about a "leaf" in the character sheet. remember the questions I gave as reference. we're to infer the chracter from the inventory, attire, habits, skill concrete examples...try to catch a glimpse unto the chracter life. remember to give 3 options for the question, each one should be illustrated in the theme you can understand from all the information I gave here. it's a front side of a virtual rpg character creation card. 
+    consider the overall aspects of the character sheet like: gender, race,  skills, motivation, attire, demeanor. alignment. try to imagine the character sheet of systems like whitewolf vampire the masquerade or call of cthulu. and even D&D. 
+    when making the illustrations please try to give each illustration a different tone to signify the different direction of the character.try to make the illustration full frame. and remember it's an RPG collector cards deck themed. with the atmosphere provided by the texture here . the illustration should be fitting to be used as part of a react app component with html and css. please make the illustration for EVERY option you provide with its description, make it aligned with the texture provided and its artistic influences. you can elaborate on them but keep the tone and atmosphere.. do your best to fit it to this new rpg universe we're exploring . remember to give 3 options for each question. remember the guidelines for the illustrations.
+    return format: 
+    {"question": Str, 'options':[{'title':Str, 'description':str, 'category':'str, 'subcategory':Str, 'illlustration': prompt that would be served as an input for a textToImage api call to Dalle3 . font:googlefont }] (3 items in the array)
+    follow this card texture tone and theme: "card texture: "Card texture: Channeling the haunting beauty of Art Nouveau entwined with the chilling mystique of Siberian folklore, envision a backdrop swirling with icy blues and silvers. The edges of the card give the impression of frost creeping in, while delicate filigree designs, reminiscent of icicles, drape from the top and bottom. Central to this is an archetypal emblem of a mountain, surrounded by flourishes that suggest gusts of wind and snow. The design encapsulates the cold, mysterious aura of the Bear's Fang Summit and the secrets of the Ancient Lighthouse, all in an RPG essence.","font":"Noto Sans"". remember that it will all be a virtual card with a front and back side . the back side is the textureCard described and the front goes along the same artistic guidelines. return only the JSON
+    
+    `
+}
+
 function askForBooksGeneration(){
     const prompt = `do you think you can think of a list of like 10 different books, parchments, maps etc...
     various medium of writings that could be found in the premises of the master storyteller 
@@ -79,9 +137,7 @@ function generateMasterStorytellerChat(paragraph){
     
     this is the paragraph you client gives you, before your chat, or rather you..interviewing him after reading the fragment he wrote about this universe:
         
-        PARAGRAPH_START--- "it was late afternoon and the setting sun orange light entered through the decorated open King's chamber windows. The King was away for more than a week.
-    but none of the 4 guards standing outside, next to the thick Mahagoni Door new. 
-    He sneaked just a week ago, in the middle of the night. only his most trusted advisor, Habin new. he headed toward the old structure up on the mountain outside the city.  Habin's eyewitness accounts of unusual footprints ringing the realm, a prelude to a possible assault. The mountain hideout, a safe sanctuary for strategic devising...but as the days passed the footprints and the intelligence gathered from around the kingdom became even more puzzling. the footprints were not of ...an earthly creature. Habin retrieved a cryptograph from his pocket - a royal secret he knew. It matched. The King was summoning something. he needed his family seal, a clear night sky when both moons are full, and the fastest horse he could fetch."  ---PARAGRAPH_END
+        PARAGRAPH_START--- "${paragraph}"  ---PARAGRAPH_END
         
         your client being the one who wrote this fragment  has a firsthand knowledge of this universe, although he might not be totally aware of it... he has the answers...or will gradually understand he has them.
         Through your discourse, you seek to validate or refine your assumptions and, in the process, 
@@ -745,6 +801,7 @@ module.exports = {
     askForBooksGeneration,
     generatePrefixesPrompt2,
     generateFragmentsBeginnings,
-    generate_texture_by_fragment
+    generate_texture_by_fragment,
+    getOpenaiClient
 };
 
