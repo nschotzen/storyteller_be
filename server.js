@@ -7,7 +7,7 @@ const { directExternalApiCall, generateMasterCartographerChat, generatePrefixesP
   generateContinuationPrompt, generateMasterStorytellerChat, generateMasterStorytellerConclusionChat, askForBooksGeneration } = require("./ai/openai/utils.js")
 const {  generateTextureImgFromPrompt, generateTexturesFromPrompts } = require("./ai/textToImage/api.js")
 
-const storagePath = path.join(__dirname, 'assets/jsonDb', 'chatSessions.json');
+const storytellerSessions = path.join(__dirname, 'assets/jsonDb', 'chatSessions.json');
 
 const ensureDirectoryExists = async (dirPath) => {
   try {
@@ -162,7 +162,7 @@ function getRandomCategory() {
   return items[randomIndex];
 }
 
-const getChatSessions = async () => {
+const getChatSessions = async (storagePath=storytellerSessions) => {
   try {
       const data = await fs.readFile(storagePath, 'utf8');
       return JSON.parse(data);
@@ -176,6 +176,13 @@ const setChatSessions = async (sessions) => {
   await fs.writeFile(storagePath,sessions);
 };
 
+
+app.get('/charactercreation', async (req, res)=> {
+  const sessionId = req.query.sessionId || 'Unknown Session';
+  const userInput = req.query.userInput || '';
+  const data = await characterCreationFlow(sessionId);
+  res.json( data);
+})
 
 
 app.get('/chatWithMaster', async (req, res) => {
@@ -245,6 +252,19 @@ app.get('/chatWithMaster', async (req, res) => {
   }
 });
 
+app.get('/createCharacter', async (req, res) => {
+  const sessionId = req.query.sessionId || 'Unknown Session';
+
+  // Initialize or retrieve the character creation session
+  const characterSessions = await getCharacterSessions();
+  if (!characterSessions[sessionId]) {
+    characterSessions[sessionId] = {
+      step: 'initial',
+      data: {}
+    };
+  }
+});
+  
 
 app.get('/chatWithMasterWorking', async (req, res) => {
 

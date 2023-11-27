@@ -62,7 +62,7 @@ function generateProctorOfProficiencyChat(paragraph){
 
 }
 
-function characterCreationInitialOptions(previousDiscussions=''){
+function characterCreationInitialOptionsPrompt(previousDiscussions='', texture=''){
     const prompt =`you're going to be given a fragment of a narrative cowritten by the storyteller and gpt-4. after that there's a discussion between the master storyteller detective (portrayed by gpt-4) and the storyteller. 
     it's going to expand on the ideas and theme presented in the initial narrative fragment.
     there's also a "texture card" that serves as a texttoImage prompt to provide texture for virtual card deck inspired by this fledging universe.
@@ -102,9 +102,10 @@ function characterCreationInitialOptions(previousDiscussions=''){
     when making the illustrations please try to give each illustration a different tone to signify the different direction of the character.try to make the illustration full frame. and remember it's an RPG collector cards deck themed. with the atmosphere provided by the texture here . the illustration should be fitting to be used as part of a react app component with html and css. please make the illustration for EVERY option you provide with its description, make it aligned with the texture provided and its artistic influences. you can elaborate on them but keep the tone and atmosphere.. do your best to fit it to this new rpg universe we're exploring . remember to give 3 options for each question. remember the guidelines for the illustrations.
     return format: 
     {"question": Str, 'options':[{'title':Str, 'description':str, 'category':'str, 'subcategory':Str, 'illlustration': prompt that would be served as an input for a textToImage api call to Dalle3 . font:googlefont }] (3 items in the array)
-    follow this card texture tone and theme: "card texture: "Card texture: Channeling the haunting beauty of Art Nouveau entwined with the chilling mystique of Siberian folklore, envision a backdrop swirling with icy blues and silvers. The edges of the card give the impression of frost creeping in, while delicate filigree designs, reminiscent of icicles, drape from the top and bottom. Central to this is an archetypal emblem of a mountain, surrounded by flourishes that suggest gusts of wind and snow. The design encapsulates the cold, mysterious aura of the Bear's Fang Summit and the secrets of the Ancient Lighthouse, all in an RPG essence.","font":"Noto Sans"". remember that it will all be a virtual card with a front and back side . the back side is the textureCard described and the front goes along the same artistic guidelines. return only the JSON
+    follow this card texture tone and theme: "card texture: "${texture}","font":"Noto Sans"". remember that it will all be a virtual card with a front and back side . the back side is the textureCard described and the front goes along the same artistic guidelines. return only the JSON
     
     `
+    return prompt;
 }
 
 function askForBooksGeneration(){
@@ -762,22 +763,27 @@ function generatePrefixesPrompt2(userText = null, texture = null, variations = 4
 
 
 
-async function directExternalApiCall(prompts, max_tokens = 2500, temperature=1) {
+async function directExternalApiCall(prompts, max_tokens = 2500, temperature=1, mockedResponse=None) {
     try{
-        const completion = await getOpenaiClient().chat.completions.create({
-            max_tokens,
-            model: 'gpt-4',
-            messages: prompts,
-            temperature,
-            presence_penalty: 0.0
-        });
+        let rawResp = mockedResponse
+        if(! mockedResponse){
+            const completion = await getOpenaiClient().chat.completions.create({
+                max_tokens,
+                model: 'gpt-4',
+                messages: prompts,
+                temperature,
+                presence_penalty: 0.0
+            });
+        
+        
     
-    
-
-        const rawResp = completion.choices[0].message.content.replace(
-            /(\r\n|\n|\r)/gm,
-            ""
-        );
+            rawResp = completion.choices[0].message.content.replace(
+                /(\r\n|\n|\r)/gm,
+                ""
+            );
+        }
+        
+        
         try{
             return JSON.parse(rawResp);
         }
@@ -802,6 +808,7 @@ module.exports = {
     generatePrefixesPrompt2,
     generateFragmentsBeginnings,
     generate_texture_by_fragment,
-    getOpenaiClient
+    getOpenaiClient,
+    characterCreationInitialOptionsPrompt
 };
 
