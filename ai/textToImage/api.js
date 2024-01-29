@@ -3,7 +3,8 @@ const https = require('https');
 const path = require('path');
 const fetch = require('node-fetch');
 const { generateAsync } = require('stability-client')
-const { generate_texture_by_fragment, directExternalApiCall, getOpenaiClient} = require('../openai/utils')
+const { generate_texture_by_fragment_and_conversation, directExternalApiCall, getOpenaiClient} = require('../openai/utils')
+const { saveTextures, getFragment, getSessionChat, setTexture} = require('../../storyteller/utils')
 require('fs');
 const { promisify } = require('util');
 const pipeline = promisify(require('stream').pipeline);
@@ -58,7 +59,11 @@ async function downloadImage(url, path) {
     });
 }
 
-async function textToImageOpenAi(prompt, samples=1, localPath, shouldMock= false){
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function textToImageOpenAi(prompt, samples=1, localPath, shouldMock= false, maxRetries=3){
   if(shouldMock)
   {
     return {
@@ -68,31 +73,107 @@ async function textToImageOpenAi(prompt, samples=1, localPath, shouldMock= false
   }
   
   else{
-    const response = await getOpenaiClient().images.generate(
-      { model: "dall-e-3",
-        prompt,
-        size:"1024x1024",
-        n:1,
+    
+    for (let attempt=1; attempt <= maxRetries; attempt+1) {
+      try {
+        const response = await getOpenaiClient().images.generate({
+          model: "dall-e-3",
+          prompt,
+          size: "1024x1024",
+          n: samples,
+        });
+  
+        const { revised_prompt, url } = response.data[0];
+        await downloadImage(url, localPath);
+        return { revised_prompt, url, localPath };
+      } catch (e) {
+        console.log('Attempt', attempt + 1, 'failed for OpenAI DALL-E 3:', e);
+        let sleepTo = 5* (attempt^2)
+        await sleep(sleepTo)
       }
-    )
-    const {revised_prompt, url} = response.data[0]
-    await downloadImage(url, localPath)
-   return {revised_prompt, url, localPath}
+    }
+  
+    console.log('All attempts failed for OpenAI DALL-E 3');
+    return { revised_prompt: null, url: null, localPath: null };
+    
   } 
   
 }
-
-
 function characterCreationOptionPrompt(cardStats){
+  const { title, illustration, texture, category, subcategory } = cardStats;
+const prompt = `Create a cinematic RPG collector card for ${category}/${subcategory}: "${title}". 
+
+Illustration: ${illustration}
+
+The card should be rooted in an in-game scene, as if captured in a moment of action or interaction, with a grainy, cinematic quality. Use the texture "${texture}" as a guideline for the artistic theme and style, infusing the image with embellishments and artistic flourishes that fit the RPG universe.
+
+Focus on a dynamic POV composition, where the scene unfolds as seen through the eyes of a character within the game world.`;
+return prompt;
+}
+
+function bookDeteriorationPrompt(deteriorationLevel, detioriationDescription){
+  let deteriorationLevelDesc = ''
+  if(deteriorationLevel == 1){
+    deteriorationLevelDesc = 'DETERIORATION LEVEL 1(out of 4): Early stages of Deterioration'
+  }
+  else if(deteriorationLevel == 2){
+    deteriorationLevelDesc = 'DETERIORATION LEVEL 2(out of 4): Advanced stages of Deterioration'
+  }
+  else if(deteriorationLevel == 3){
+    deteriorationLevelDesc = 'DETERIORATION LEVEL 3 (out of 4): Severe Damage! '
+  }
+  else{
+    deteriorationLevelDesc = 'DETERIORATION LEVEL 4 (out of 4): almost complete destruction! '
+  }
+  const prompt = `${deteriorationLevel}:
+  ${deteriorationLevelDesc}
+  Create an image showing advanced deterioration (Level ${deteriorationLevel}) in a realistic, gritty, and documentary style. The scene is a location where a unique, faded book is subtly present but not the focus. The book should blend into the background, noticeable only upon closer inspection. Emphasize the environmental effects on the book, such as sand and sunlight. The book should be less prominent, almost hidden, and deeply integrated into its surroundings, like being partially covered by sand or near old machinery. Use cinematic techniques like deep shadows, light flares, and a dramatic interplay of light and dark for a moody atmosphere. Add rich textural details to highlight the raw, rugged aspect and introduce narrative elements to suggest the past life of the location. The image should have a vintage, film-like quality with grainy texture, soft focus, subdued colors, vignetting, and natural imperfections like light leaks or scratches. The book should not dominate the scene but be an integral, unemphasized part of it.
+  `
+  return prompt
+}
+
+function storytellerDetectiveFirstArrivalIllustrationPrompt(texture, scene){
+  const prompt = `first take this texture and breath it in: "overall texture, essence and vibe of this scene:
+  "${texture}"
+  it should be in the deepest layers and motiffs and influences of this illustration. this is the core!!
+  
+  now to where we're at:
+  
+  this is the story of the storyteller detective. as he gets into a foreign realm, which is at the last stages of deterioration and becoming totally lost and forgotten. The Storyteller detective is almost at the location of the resing place of the last book telling the tales of this once great storytelling universe. he's almost at the location . we acoompany the storyteller detective in the last scene of the journey of finding this going to be forever lost book and storytelling realm.
+  we will focus on this last process of  the storyteller detective's journey . 
+  it's going to be a sequence of narrative description woven with a series of options of continuations by the user (who is the storyteller himself, of this decaying soon to be forgotten storytelling  realm ) 
+  
+  
+  
+  but this is the scene I want you to make an illustration of 
+  and by this is how the storyteller detective reached to that place 
+  where the book should be: pay attention to every detail in it, and try to feel it. make us feel its gritty physicality. breath the location and the scene. 
+  pay attention to places, people, items climate described in it: 
+  "${scene}
+  
+  "Pay really close attention to all the details here: people, places, climate, atmosphere, items, mode of transportation. 
+  do not lightly add details that will have a major storytelling effect.
+  
+  
+  Create an image showing this scene in a realistic, gritty, and documentary style. Use cinematic techniques like deep shadows, light flares, and a dramatic interplay of light and dark for a moody atmosphere. Add rich textural details to highlight the raw, rugged aspect and introduce narrative elements to suggest the past life of the location. The image should have a vintage, film-like quality with grainy texture, soft focus, subdued colors, vignetting, and natural imperfections like light leaks or scratches. The book should not dominate the scene but be an integral, unemphasized part of it. add a sense of sad poeticness, and sense of urgency. be inspired by Akira Kurosawa all the way to Quentin Tarantino,. I want it raw...gritty,...natural light. rugged. the details are important: gender, how many people, the location, the time of day, the climate. I want to feel that we're caught in a moment. in the middle of something. the sense of urgency. it is not staged. it's as it happens. the storyteller detective face cannot be clearly seen.`
+
+}
+
+
+function characterCreationOptionPrompt2(cardStats){
   const {title, font, illustration, description, texture, category, subcategory} = cardStats;
-  return `Create a full-frame illustration for the front side of a virtual RPG character creation card. The card, 
-  titled '${title}' in ${font} font.(and this is the ONLY readable text in this illustration). the card is in category ${category} and ${subcategory} subcategory. . 
-  Please create this front full frame illustration out of this illustration description: 
-  "llustration': '${illustration}' and also reference this: "${description}". The design should fill the entire frame. No additional text besides the title.
-  the back side of the card is generated by this prompt: "${texture}". 
-  I want the front side to have the same artistic influences and theme. the use of embellishments etc.
-  Remember, the design should fill the WHOLE frame. it's a full frame illustration!! make it epic.  size 1024X1024. artStation winner. 
-  cinematic. inspiring and inviting to discover a hero through the process of choosing cards.`
+  const prompt = `${category}/${subcategory}/${title}(${font}):
+  create an virtual RPG collector card: 
+  
+  ${illustration}
+  
+  use this texture as a guideline for artistic themese and style, and feel:
+  
+  "${texture}". 
+  Use embellishments, and flourishes. 
+  Make it a POV composition. whatever in that card is being seen by someone's perspective. it's rooted and grounded, taken within its context. 
+  It's taken from a scene- it's less a presentation rather seeing it as might present itself within a scene context.`
+  return prompt
   
 }
 
@@ -165,38 +246,29 @@ async function generateTextureImgFromPrompt(prompt, apiKey, apiOptions = {}, sam
 }
 
 
-async function generateTexturesFromPrompts(prompt, sessionId = 100){
+async function generateTextureOptionsByText(sessionId, shouldMockImage=false, openAiMock=''){
 
-  const sanitizeString = (str) => {
-    return str.replace(/[^a-zA-Z0-9-_]/g, '_');  // Replace any character that's not a letter, number, underscore, or dash with an underscore
-  }
-  
-  const firstThreeWords = sanitizeString(prompt.split(' ').slice(0, 3).join('_'));
-  const subfolderName = `${firstThreeWords}_${sessionId}`;
-  const subfolderPath = path.join(__dirname, '../../assets', subfolderName);
+  const fragment = await getFragment(sessionId)
+  const allSessions = await getSessionChat(sessionId);
+  const storytellerConversation = allSessions.filter((i)=> { return i.role != '2user'}).map((i, idx)=> {return `${idx}: ${i.content}`}).join("\n")
 
-  if (!fs.existsSync(subfolderPath)){
-    fs.mkdirSync(subfolderPath);
-  }
-
-  fs.writeFileSync(path.join(subfolderPath, 'original_prompt.txt'), prompt);
-  
-  const generateTexturesPrompt = generate_texture_by_fragment(prompt);
-  const texturePrompts = await directExternalApiCall(generateTexturesPrompt);
+  const generateTexturesPrompt = generate_texture_by_fragment_and_conversation(fragment, storytellerConversation);
+  const texturePrompts = await directExternalApiCall(generateTexturesPrompt, 2500, 1.03, openAiMock);
   const textures = await Promise.all(texturePrompts.map(async (texturePrompt, index) => {
     // Create a subfolder for the texture
-    texturePrompt.prompt +=  ` archetypal. card Texture. symbolic`
-    const textureSubfolderName = `texture_${index}`;
-    const textureSubfolderPath = path.join(subfolderPath, textureSubfolderName);
-  
-    if (!fs.existsSync(textureSubfolderPath)){
-      fs.mkdirSync(textureSubfolderPath);
+    // {textureName: Str, DecorativeStyle:Str, description:String, font:String, artisticInfluences:[KeyWords], genre:Str. }
+    texturePrompt.prompt =  `"RPG collector card texture prompt. SEAMLESS. FULL FRAME:"${texturePrompt.prompt} "". can you please take this above prompt. and try to make it more of a card texture. with edges embellishments. the result should feel as an infusion. something suitable for RPG. FULL FRAME ONLY!!`
+    
+    const subfolderPath = path.join(__dirname, '../../assets', `${sessionId}/textures/${Math.floor(Math.random() * 1000)}`);
+    if (!fs.existsSync(subfolderPath)){
+      fs.mkdirSync(subfolderPath, { recursive: true });
     }
-
-    fs.writeFileSync(path.join(textureSubfolderPath, 'texture_prompt.txt'), texturePrompt.prompt);
-    const url = await textToImage(texturePrompt.prompt, 1, textureSubfolderPath);
-    return {url, font: texturePrompt.font}
+    const url = await textToImageOpenAi(`${texturePrompt.prompt}. Seamless texture. Full Frame design. thick feel for the texture. real material: raw, grainy, cinematic, handheld, film quality, rough, ragged, time worn. inspiring. immersive. exciting. natural light. think of proper embellishments, flourishes. .unbroken. full frame design. surprising idiosyncertic backsdie a unique tarot deck.  think of a real material this card can be made upon. wood, clay, parchment, metal, stone etc..all worn by time and usage`, 1, `${subfolderPath}/${index}.png`, shouldMockImage);
+    // const url = await textToImageOpenAi(`CREATE AN RPG COLLECTOR CARD TEXTURE OUT OF THIS GUIDELINE JSON:${JSON.stringify(texturePrompt)}`, 1, `${subfolderPath}/${index}.png`, shouldMockImage);
+    
+    return {url, font: texturePrompt.font, prompt:texturePrompt.prompt, index}
   }));
+  await saveTextures(sessionId, textures)
   
   
   return textures;
@@ -204,10 +276,12 @@ async function generateTexturesFromPrompts(prompt, sessionId = 100){
 
 module.exports = {
   generateTextureImgFromPrompt,
-  generateTexturesFromPrompts,
+  generateTextureOptionsByText,
   textToImage,
   textToImageOpenAi,
-  characterCreationOptionPrompt
+  characterCreationOptionPrompt,
+  bookDeteriorationPrompt,
+  storytellerDetectiveFirstArrivalIllustrationPrompt
 };
 
 

@@ -4,10 +4,11 @@ const fs = require('fs').promises;
 const fsSync = require('fs')
 const path = require('path');
 const { directExternalApiCall, generateMasterCartographerChat, generatePrefixesPrompt2, generateFragmentsBeginnings, 
-  generateContinuationPrompt, generateMasterStorytellerChat, generateMasterStorytellerConclusionChat, askForBooksGeneration } = require("./ai/openai/utils.js")
-const {  generateTextureImgFromPrompt, generateTexturesFromPrompts } = require("./ai/textToImage/api.js")
+  generateContinuationPrompt, generateMasterStorytellerChat, generateMasterStorytellerConclusionChat, askForBooksGeneration, generateStorytellerDetectiveFirstParagraphSession } = require("./ai/openai/utils.js")
+const {  generateTextureImgFromPrompt, generateTextureOptionsByText } = require("./ai/textToImage/api.js");
+const { chatWithstoryteller, saveFragment } = require('./storyteller/utils.js');
 
-const storytellerSessions = path.join(__dirname, 'assets/jsonDb', 'chatSessions.json');
+
 
 const ensureDirectoryExists = async (dirPath) => {
   try {
@@ -27,7 +28,7 @@ const writeContentToFile = async (subfolderName, fileName, content)=> {
 
   await ensureDirectoryExists(subfolderPath);
   const rnd = Math.floor(Math.random() * 11);
-  fsSync.writeFileSync(path.join(subfolderPath, `${fileName}${rnd}.json`), content);
+  fsSync.writeFileSync(path.join(subfolderPath, `${fileName}${rnd}.json`), JSON.stringify(content));
 }
 
 // Usage example:
@@ -142,18 +143,81 @@ app.post('/api/storytellingOld', async (req, res) => {
   
         const firstThreeWords = sanitizeString(userText.split(' ').slice(0, 3).join('_'));
         const subfolderName = `${firstThreeWords}_${sessionId}}`;  
-        writeContentToFile(subfolderName, 'prefixes', prefixes)
+        await writeContentToFile(subfolderName, 'prefixes', prefixes)
     
   
         // Sending the result back to the client
+        const demo = `'{"prefixes":[{"prefix":"\". With panic in her eyes, she glanced back briefly, revealing shadows flickering through the trees behind them.\"","fontName":"Roboto","fontSize":"12","fontColor":"#333333"},{"prefix":"\". Gripping my hand tighter, her familiar warmth provided a fleeting comfort amidst the chaos.\"","fontName":"Merriweather","fontSize":"14","fontColor":"#444444"},{"prefix":"\". A thick fog began to descend, obscuring the path ahead, yet the sound of rushing water beckoned them forward.\"","fontName":"Lato","fontSize":"14","fontColor":"#555555"},{"prefix":"\". Just as hope wavered, an old boat, hidden among the reeds, promised a silent escape across the water.\"","fontName":"Open Sans","fontSize":"14","fontColor":"#666666"}],"current_narrative":"\"Run! Now! and don't look back until you reach the river!,\" she said"}'`
         res.json({
-          prefixes : prefixes.continuations.map((e) => {return `${userText} ${e.continuation}`})
+          prefixes : prefixes.continuations.map((e) => {return e.continuation}),
+          current_narrative: userText
         });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Server error' });
     }
   });
+
+  app.post('/api/storytelling_detective', async (req, res) => {
+    try {
+        const sanitizeString = (str) => {
+          return str.replace(/[^a-zA-Z0-9-_]/g, '_');  // Replace any character that's not a letter, number, underscore, or dash with an underscore
+        }
+      
+        const { userText, textureId, sessionId } = req.body;  
+  
+        const prompts = generateStorytellerDetectiveFirstParagraphSession();
+        const prefixes = await directExternalApiCall(prompts, 2500, 1.02);
+  
+        const firstThreeWords = sanitizeString(userText.split(' ').slice(0, 3).join('_'));
+        const subfolderName = `${firstThreeWords}_${sessionId}}`;  
+        await writeContentToFile(subfolderName, 'prefixes', prefixes)
+    
+        //
+        //   "current_narrative": "It was almost",
+    //   "choices": {
+    //     "choice_1": {
+    //       "options": [
+    //         {
+    //           "continuation": "dusk",
+    //           "storytelling_points": 1
+    //         },
+    //         {
+    //           "continuation": "midnight",
+    //           "storytelling_points": 2
+    //         },
+    //         {
+    //           "continuation": "early morning",
+    //           "storytelling_points": 1
+    //         },
+    //         {
+    //           "continuation": "noon",
+    //           "storytelling_points": 1
+    //         },
+    //         {
+    //           "continuation": "the breaking of dawn",
+    //           "storytelling_points": 3
+    //         }
+    //       ]
+    //     }
+    //   }
+    // }
+        // Sending the result back to the client
+        res.json({
+          prefixes: prefixes.choices.choice_1.options.map(option => ({
+            prefix: option.continuation,
+            fontName: "Arial", // Replace with your default font name
+            fontSize: "12px", // Replace with your default font size
+            fontColor: "black" // Replace with your default font color
+          })),
+          current_narrative: prefixes.current_narrative
+        });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
   
 
 function getRandomCategory() {
@@ -162,19 +226,6 @@ function getRandomCategory() {
   return items[randomIndex];
 }
 
-const getChatSessions = async (storagePath=storytellerSessions) => {
-  try {
-      const data = await fs.readFile(storagePath, 'utf8');
-      return JSON.parse(data);
-  } catch (err) {
-      // If file doesn't exist, return an empty object
-      return {};
-  }
-};
-
-const setChatSessions = async (sessions) => {
-  await fs.writeFile(storagePath,sessions);
-};
 
 
 app.get('/charactercreation', async (req, res)=> {
@@ -196,60 +247,10 @@ app.get('/chatWithMaster', async (req, res) => {
   const sessionId = req.query.sessionId || 'Unknown Session';
   const fragmentText = req.query.fragmentText || '';
 
-  const chatSessions = await getChatSessions();
-  if (!chatSessions[sessionId]) {
-    chatSessions[sessionId] = [];
-  }
+  masterResponse = await chatWithstoryteller(sessionId, userInput)
 
-  // Save user input with role
-  if (userInput) {
-    chatSessions[sessionId].push({ role: 'user', content: userInput });
-  }
-
-  const previousMessages = chatSessions[sessionId];
+  res.json({ text: masterResponse, books: book_list });
   
-  if (previousMessages.length <= 4) {
-    const prompts = generateMasterStorytellerChat(fragmentText);
-    const resFromExternalApi = await directExternalApiCall(prompts.concat(previousMessages));
-    const { storyteller_response: masterResponse } = resFromExternalApi;
-
-    // Save master response with role
-    if (masterResponse) {
-      chatSessions[sessionId].push({ role: 'system', content: masterResponse });
-    }
-    await setChatSessions(chatSessions);
-
-    res.json({ text: masterResponse });
-
-  } else if (previousMessages.length === 5) {
-    const conclusionPrompts = generateMasterStorytellerConclusionChat(previousMessages);
-    const resFromExternalApi = await directExternalApiCall(conclusionPrompts);
-    const { storyteller_response: masterResponse } = resFromExternalApi;
-
-    // Save master response with role
-    if (masterResponse) {
-      chatSessions[sessionId].push({ role: 'system', content: masterResponse });
-    }
-    await setChatSessions(chatSessions);
-
-    res.json({ text: masterResponse });
-
-  } else {
-    const bookPrompts = askForBooksGeneration(previousMessages);
-    const resFromExternalApi = await directExternalApiCall(bookPrompts);
-    const { storyteller_response: masterResponse, book_list } = resFromExternalApi;
-
-    // Save master response and book list
-    if (masterResponse) {
-      chatSessions[sessionId].push({ role: 'system', content: masterResponse });
-    }
-    if (book_list && Array.isArray(book_list)) {
-      chatSessions[sessionId].push({ role: 'system', content: 'book_list', data: book_list });
-    }
-    await setChatSessions(chatSessions);
-
-    res.json({ text: masterResponse, books: book_list });
-  }
 });
 
 app.get('/createCharacter', async (req, res) => {
@@ -321,10 +322,11 @@ app.post('/api/generateTextures', async (req, res)=> {
 
   const fragment = req.body.userText || null;
   const sessionId = req.body.sessionId 
-  const textures = await generateTexturesFromPrompts(fragment, sessionId);
+  await saveFragment(sessionId, fragment)
+  const textures = await generateTextureOptionsByText(sessionId);
   const cards = textures.map((texture) => { 
     return {
-      url: `${texture.url}`,
+      url: `${texture.url.localPath.includes('/assets') ? texture.url.localPath.substring(texture.url.localPath.indexOf('/assets')) : texture.url.localPath}`,
       cover: "", // Add logic for cover
       title:  getRandomCategory() ,
       fontName: texture.font || "Arial ",
@@ -344,8 +346,23 @@ app.get('/api/prefixes', async (req, res) => {
   
     // const prompts = generateFragmentsBeginnings(texture, numberOfPrefixes);
     // const prefixes = await directExternalApiCall(prompts);
-    const prefixes = ["it wasn't unusual for them to see wolf tracks so close to the farm, but this one was different  , its grand size imprinting a distinct story on the soft soil","It was almost dark as they finally reached", "she grasped her amulet strongly, as the horses started gallopping", 
-    `Run! Now! and don't look back until you reach the river`, "I admit it, seeing the dark woods for the first time was scary"]  
+    const prefixes = [{"fontName":"Tangerine", 
+    "prefix": `it wasn't unusual for them to see wolf tracks so close to the farm, but this one was different  , its grand size imprinting a distinct story on the soft soil"`,
+    "fontSize":"34px"}
+    ,
+    {"fontName":"Tangerine", 
+    "prefix": "It was almost dark as they finally reached",
+    "fontSize": "34px",},
+    {"fontName":"Tangerine", 
+    "prefix": "she grasped her amulet strongly, as the horses started gallopping",
+    "fontSize": "34px",},
+    {"fontName":"Tangerine", 
+    "prefix": "Run! Now! and don't look back until you reach the river",
+    "fontSize": "34px",},
+    {"fontName":"Tangerine", 
+    "fontSize": "34px",
+    "prefix": "I admit it, seeing the dark woods for the first time was scary"}
+    ]  
     console.log(`returning prefixes ${prefixes}`)
     res.json(prefixes);
   });
@@ -370,7 +387,8 @@ app.get('/api/cards', async (req, res) => {
             const titleIndex = prompts?.cardTitles ? Math.floor(Math.random() * prompts.cardTitles.length) : 0;
 
             cards.push({
-                url: `/assets/textures/${folderNumber}/${textures[textureIndex]}`,
+                // url: `/assets/textures/${folderNumber}/${textures[textureIndex]}`,
+                url: `/assets/textures/books/${i+1}.png`,
                 cover: "", // Add logic for cover
                 title: prompts.cardTitles && prompts.cardTitles.length > 0  ? prompts.cardTitles[titleIndex].title : "working title",
                 fontName: prompts.cardTitles && prompts.cardTitles.length > 0 ? prompts.cardTitles[titleIndex].font : "Arial ",
