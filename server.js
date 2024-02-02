@@ -4,9 +4,10 @@ const fs = require('fs').promises;
 const fsSync = require('fs')
 const path = require('path');
 const { directExternalApiCall, generateMasterCartographerChat, generatePrefixesPrompt2, generateFragmentsBeginnings, 
-  generateContinuationPrompt, generateMasterStorytellerChat, generateMasterStorytellerConclusionChat, askForBooksGeneration, generateStorytellerDetectiveFirstParagraphSession } = require("./ai/openai/utils.js")
+  generateContinuationPrompt, generateMasterStorytellerChat, generateMasterStorytellerConclusionChat, askForBooksGeneration } = require("./ai/openai/utils.js")
 const {  generateTextureImgFromPrompt, generateTextureOptionsByText } = require("./ai/textToImage/api.js");
-const { chatWithstoryteller, saveFragment } = require('./storyteller/utils.js');
+const { chatWithstoryteller, saveFragment, storytellerDetectiveFirstParagraphCreation } = require('./storyteller/utils.js');
+const DEMO_MODE = false
 
 
 
@@ -130,7 +131,7 @@ app.post('/api/storytellingOld', async (req, res) => {
     }
   });
   
-  app.post('/api/storytelling', async (req, res) => {
+  app.post('/api/storytelling_odd', async (req, res) => {
     try {
         const sanitizeString = (str) => {
           return str.replace(/[^a-zA-Z0-9-_]/g, '_');  // Replace any character that's not a letter, number, underscore, or dash with an underscore
@@ -158,57 +159,62 @@ app.post('/api/storytellingOld', async (req, res) => {
     }
   });
 
-  app.post('/api/storytelling_detective', async (req, res) => {
+  app.post('/api/storytelling', async (req, res) => {
     try {
         const sanitizeString = (str) => {
           return str.replace(/[^a-zA-Z0-9-_]/g, '_');  // Replace any character that's not a letter, number, underscore, or dash with an underscore
         }
       
         const { userText, textureId, sessionId } = req.body;  
-  
-        const prompts = generateStorytellerDetectiveFirstParagraphSession();
-        const prefixes = await directExternalApiCall(prompts, 2500, 1.02);
-  
-        const firstThreeWords = sanitizeString(userText.split(' ').slice(0, 3).join('_'));
-        const subfolderName = `${firstThreeWords}_${sessionId}}`;  
-        await writeContentToFile(subfolderName, 'prefixes', prefixes)
+        let prefixes = []
+        if( ! DEMO_MODE){
+          prefixes = await storytellerDetectiveFirstParagraphCreation(sessionId, userText);
     
-        //
-        //   "current_narrative": "It was almost",
-    //   "choices": {
-    //     "choice_1": {
-    //       "options": [
-    //         {
-    //           "continuation": "dusk",
-    //           "storytelling_points": 1
-    //         },
-    //         {
-    //           "continuation": "midnight",
-    //           "storytelling_points": 2
-    //         },
-    //         {
-    //           "continuation": "early morning",
-    //           "storytelling_points": 1
-    //         },
-    //         {
-    //           "continuation": "noon",
-    //           "storytelling_points": 1
-    //         },
-    //         {
-    //           "continuation": "the breaking of dawn",
-    //           "storytelling_points": 3
-    //         }
-    //       ]
-    //     }
-    //   }
-    // }
+          const firstThreeWords = sanitizeString(userText.split(' ').slice(0, 3).join('_'));
+          const subfolderName = `${firstThreeWords}_${sessionId}}`;  
+          await writeContentToFile(subfolderName, 'prefixes', prefixes)
+        }
+        else{
+          prefixes = {
+            "current_narrative": "It was almost",
+            "choices": {
+          "choice_1": {
+            "options": [
+              {
+                "continuation": "dusk",
+                "storytelling_points": 1
+              },
+              {
+                "continuation": "midnight",
+                "storytelling_points": 2
+              },
+              {
+                "continuation": "early morning",
+                "storytelling_points": 1
+              },
+              {
+                "continuation": "noon",
+                "storytelling_points": 1
+              },
+              {
+                "continuation": "the breaking of dawn",
+                "storytelling_points": 3
+              }
+            ]
+          }
+            }
+          }
+        }
+    
+      
         // Sending the result back to the client
         res.json({
           prefixes: prefixes.choices.choice_1.options.map(option => ({
             prefix: option.continuation,
+            storytelling_points: option.storytelling_points,
             fontName: "Arial", // Replace with your default font name
             fontSize: "12px", // Replace with your default font size
-            fontColor: "black" // Replace with your default font color
+            fontColor: "Green" // Replace with your default font color
           })),
           current_narrative: prefixes.current_narrative
         });

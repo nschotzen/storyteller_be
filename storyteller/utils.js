@@ -3,7 +3,7 @@ const fsPromises = require('fs').promises;
 
 const path = require('path')
 const { directExternalApiCall, generateMasterStorytellerChat, generateMasterStorytellerConclusionChat, askForBooksGeneration,
-  generateStorytellerSummaryPropt } = require("../ai/openai/utils");
+  generateStorytellerSummaryPropt, generateStorytellerDetectiveFirstParagraphSession } = require("../ai/openai/utils");
 const { text } = require('express');
 const storytellerSessions = path.join(__dirname, 'db', 'storytelling.json');
 // const sessionDataStructre = {chat: [], fragment:'', textures:[], currentTexture:-1, character:[]}
@@ -24,6 +24,15 @@ const getStorytellerDb = async (storagePath=storytellerSessions) => {
         allData[sessionId] = initSessionDataStructure()
     }
     allData[sessionId].chat = chatSession
+    await fsPromises.writeFile(storytellerSessions, JSON.stringify(allData));
+  };
+
+  const setSessionDetectiveCreation = async (sessionId, detectiveHistory) => {
+    allData = await getStorytellerDb()
+    if (!allData[sessionId]) {
+        allData[sessionId] = initSessionDataStructure()
+    }
+    allData[sessionId].detective = detectiveHistory
     await fsPromises.writeFile(storytellerSessions, JSON.stringify(allData));
   };
 
@@ -73,7 +82,7 @@ const getStorytellerDb = async (storagePath=storytellerSessions) => {
   
 
   function initSessionDataStructure(){
-    return  {chat: [], fragment:'', textures:[], currentTexture:-1, character: [],
+    return  {chat: [], fragment:'', textures:[], currentTexture:-1, character: [], detective:[],
     discussion_summary: ''};
   }
   
@@ -83,6 +92,14 @@ const getStorytellerDb = async (storagePath=storytellerSessions) => {
         allData[sessionId] = initSessionDataStructure()
     }
     return allData[sessionId].chat
+  }
+
+  async function getSessionDetectiveCreation(sessionId){
+    allData = await getStorytellerDb()
+    if (!allData[sessionId]) {
+        allData[sessionId] = initSessionDataStructure()
+    }
+    return allData[sessionId].detective
   }
 
   async function getCharacterCreation(sessionId){
@@ -212,6 +229,41 @@ async function chatWithstoryteller(sessionId, fragmentText, userInput='', mocked
 }
 
 
+async function storytellerDetectiveFirstParagraphCreation(sessionId, userInput=''){
+
+  const detectiveHistory = await getSessionDetectiveCreation(sessionId);
+  let masterResponse
+  // Save user input with role
+  if (userInput) {
+      detectiveHistory.push({ role: 'user', content: userInput });
+  }
+
+  
+  if (detectiveHistory.filter((c)=> {return c.role =='system'}).length  <= 12) {
+      const prompts = generateStorytellerDetectiveFirstParagraphSession();
+      newNarrativeOptions = await directExternalApiCall(prompts.concat(detectiveHistory), 2500, 1.03);
+
+      // Save response with role
+      if (newNarrativeOptions) {
+        detectiveHistory.push({ role: 'system', content: JSON.stringify(newNarrativeOptions) });
+      }
+  } else {
+      // const conclusionPrompts = generateMasterStorytellerConclusionChat(previousMessages);
+      // const resFromExternalApi = await directExternalApiCall(conclusionPrompts);
+      // const { storyteller_response: masterResponse } = resFromExternalApi;
+
+      // Save master response with role
+      // if (masterResponse) {
+      //     chatHistory.push({ role: 'system', content: masterResponse });
+      // }
+      console.log('not implemented yet')
+  }
+  await setSessionDetectiveCreation(sessionId, detectiveHistory);
+  return newNarrativeOptions;
+}
+
+
+
 module.exports = {
     chatWithstoryteller,
     saveFragment,
@@ -223,5 +275,6 @@ module.exports = {
     getChosenTexture,
     setCharacterCreationQuestionAndOptions,
     getCharacterCreationSession,
-    getPreviousDiscussionSummary
+    getPreviousDiscussionSummary,
+    storytellerDetectiveFirstParagraphCreation
 };

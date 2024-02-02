@@ -1,19 +1,7 @@
 const { OpenAI } = require('openai');
 
 
-const OPENAI_API_KEYS = [
-    "DEMO_KEY"
-];
 
-const OPENAI_API_KEYS_FREE = [
-    "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",
-    "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",
-    "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",
-    "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",
-    "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",
-    "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",
-    "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",
-];
 const KEYS_TYPE = {
     BALANCE: "BALANCE",
     FREE: "FREE",
@@ -494,7 +482,7 @@ as backside for a virtual RPG deck of card.`
     
     The design elements should include subtle embellishments, motifs, and flourishes, avoiding direct references to specific Earth cultures. The goal is to create a series of textures that are unique to this RPG universe, blending abstract artistry with the tangible feel of different aged materials.
     
-    Output as JSON objects: [{prompt:String, font:string}].". remember that each item in the list is standalone and will be used on a fresh new instance of dalle-3 without any history or knowledge of the original fragment or other textures.
+    Output as JSON objects: [{prompt:String, font:string},{prompt:String, font:string},{prompt:String, font:string},{prompt:String, font:string}].". remember that each item in the list is standalone and will be used on a fresh new instance of dalle-3 without any history or knowledge of the original fragment or other textures.
     `
     return [{ role: "system", content: prompt }];
 }
@@ -1092,7 +1080,7 @@ function generateStorytellerDetectiveFirstParagraphSession(){
     
     try to follow this basic script template for a narrative: each gap represents a place to stop and give options:
     It was almost ___ (1. time of day, e.g., night/dark/noon) as the storyteller detective finally approached what seemed to be like ___ (2. object/phenomenon/structure) surfacing(or more adequate verb) ___ (3. preposition indicating position or movement) the ___ (4. specific element in the location). On a closer look, it appeared to be ___ (5. initial impression of the object/phenomenon/structure), it was a ___ (6. specific object) made of ____(7. material/materials physicality), ___ (8. more elaborate description of the object). "Such a ___ (9. adjective describing the object) thing in the ___ (10. specific part of the location) of ___ (11. broader location or context)" ___(verb indicating the way the storyteller detective said it) the storyteller detective
-    as ___ (12. pronoun: he/she/they (determines gender))  ___ (13. verb indicating dismounting or stopping their mode of transportation), ___ (pronoun based on previously chosen gender (12)- so it should be known ) ___ (14. action of securing the transportation and the mode of transportation short description). Then, taking ___ (object/s from a storage item, e.g., backpack), ___ (pronoun) proceeded to ___ (action indicating moving deeper into the location, looking for a specific place where that item/items from the storage should be used).__further examination of the surroundings in more detail. "Now where that ____(specific description of the purpose or nature of the final resting place of the book is, and how it's entered) may be?"
+    as ___ (12. pronoun: he/she/they (determines gender))  ___ (13. verb indicating dismounting or stopping their mode of transportation), ___ (pronoun based on previously chosen gender (12)- so it should be known ) ___ (14. action of securing the mode of transportation and a short description of the mode of transportation). Then, taking ___ (object/s from a storage item, e.g., backpack), ___ (pronoun) proceeded to ___ (action indicating moving deeper into the location, looking for a specific place where that item/items from the storage should be used).__further examination of the surroundings in more detail. "Now where that ____(specific description of the purpose or nature of the final resting place of the book is, and how it's entered) may be?"
     that concludes the scene.
     
     can you please try and do it? let ME be the user and you will start this and present me choices in this JSON format I demonstrated. return ONLY JSON. 
@@ -1102,23 +1090,26 @@ function generateStorytellerDetectiveFirstParagraphSession(){
     
     
     `
-    return prompt
+    return [{ role: "system", content: prompt }]
 }
 
 
 
-async function directExternalApiCall(prompts, max_tokens = 2500, temperature=1, mockedResponse=null) {
+async function directExternalApiCall(prompts, max_tokens = 2500, temperature=1, mockedResponse=null, explicitJsonObjectFormat=true) {
     try{
         let rawResp = mockedResponse
         if(! mockedResponse){
-            const completion = await getOpenaiClient().chat.completions.create({
+            let req_obj = {
                 max_tokens,
                 model: 'gpt-4-0125-preview',
-                response_format : {"type" : "json_object"},
                 messages: prompts,
                 temperature,
                 presence_penalty: 0.0
-            });
+            }
+            if(explicitJsonObjectFormat)
+                req_obj['response_format'] = {"type" : "json_object"}
+            const completion = await getOpenaiClient().chat.completions.create();
+
         
         
     

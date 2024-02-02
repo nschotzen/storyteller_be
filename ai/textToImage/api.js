@@ -253,7 +253,7 @@ async function generateTextureOptionsByText(sessionId, shouldMockImage=false, op
   const storytellerConversation = allSessions.filter((i)=> { return i.role != '2user'}).map((i, idx)=> {return `${idx}: ${i.content}`}).join("\n")
 
   const generateTexturesPrompt = generate_texture_by_fragment_and_conversation(fragment, storytellerConversation);
-  const texturePrompts = await directExternalApiCall(generateTexturesPrompt, 2500, 1.03, openAiMock);
+  const texturePrompts = await directExternalApiCall(generateTexturesPrompt, 2500, 1.03, openAiMock, false);
   const textures = await Promise.all(texturePrompts.map(async (texturePrompt, index) => {
     // Create a subfolder for the texture
     // {textureName: Str, DecorativeStyle:Str, description:String, font:String, artisticInfluences:[KeyWords], genre:Str. }
