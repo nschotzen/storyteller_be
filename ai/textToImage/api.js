@@ -245,6 +245,27 @@ async function generateTextureImgFromPrompt(prompt, apiKey, apiOptions = {}, sam
   return textureModels;
 }
 
+function textureJSONToPrompt(textureJson){
+  const {category, prompt, font, card_material, major_cultural_influences_references } = textureJson
+  
+  const resPrompt = `${category} RPG card Texture: Create a full-frame card texture that captures the essence of ${category}, 
+  incorporating this vision:"${prompt}".
+  . The design should feature a texture appearing on ${card_material}. 
+  The background should be inspired by ${major_cultural_influences_references}. 
+  Ensure the title of the category ${category}, is prominently displayed in the ${font} font , making it a key element of the design. 
+  This design should be suitable for use as a PNG texture in a React app component, 
+  reflecting the unique aspects of the card's category enhance the card like quality of the design. 
+  ensure the category is presented too`
+  return resPrompt;
+  
+  
+}
+
+function getRandomCategory() {
+  const items = ["Item", "Skill", "Location", "Character", "Event", "Place of Rest", "Creature", "Landscape", "Climate"];
+  const randomIndex = Math.floor(Math.random() * items.length);
+  return items[randomIndex];
+}
 
 async function generateTextureOptionsByText(sessionId, shouldMockImage=false, openAiMock=''){
 
@@ -253,20 +274,45 @@ async function generateTextureOptionsByText(sessionId, shouldMockImage=false, op
   const storytellerConversation = allSessions.filter((i)=> { return i.role != '2user'}).map((i, idx)=> {return `${idx}: ${i.content}`}).join("\n")
 
   const generateTexturesPrompt = generate_texture_by_fragment_and_conversation(fragment, storytellerConversation);
-  const texturePrompts = await directExternalApiCall(generateTexturesPrompt, 2500, 1.03, openAiMock, false);
-  const textures = await Promise.all(texturePrompts.map(async (texturePrompt, index) => {
+  // const textureJsons = await directExternalApiCall(generateTexturesPrompt, 2500, 1.03, openAiMock, false);
+  const textureJsons = [{
+    "prompt": "Visualize a texture that embodies the essence of an ancient, weathered stone, akin to the crumbling walls of a forgotten manor, veiled in ivy. This texture suggests the passage of time, with etched symbols and faint, mystical runes that hint at hidden knowledge and lost stories. The color scheme is a blend of dusky greys and muted greens, reflecting the encroachment of nature over man-made structures. The edges of the card feature delicate, vine-like flourishes, subtly framing the texture in a way that enhances its ancient feel. This seamless, full-frame design captures the mystical and adventurous spirit of an RPG, blending elements of dark fantasy and the natural world.",
+    "font": "Cinzel",
+    "card_material": "Stone",
+    "major_cultural_influences_references": ["GURPS Fantasy", "The Name of the Wind", "Pan's Labyrinth", "Gustave Doré"]
+  }, {
+    "prompt": "Imagine a texture reminiscent of ancient parchment, marked with the wisdom of ages. This design incorporates ethereal, glowing sigils that seem to float above the surface, representing the arcane knowledge and secrets hidden within the universe. The background is a rich, aged cream with subtle variations in color, simulating the look of old paper that has traveled through time. Around the edges, intricate scrollwork and esoteric symbols blend seamlessly, inviting the viewer into a world of discovery and ancient magic. The texture is designed to evoke the feeling of holding a piece of history in your hand, a gateway to untold stories.",
+    "font": "Merriweather",
+    "card_material": "Parchment",
+    "major_cultural_influences_references": ["Dungeons & Dragons", "The Dark Tower series", "The Witcher series", "Albrecht Dürer"]
+  }, {
+    "prompt": "Envision a texture that captures the essence of deep, shadowy waters, reflecting the moonlight. This design features a fluid, shimmering surface, with colors shifting between dark blues and silver, embodying the mysterious and often treacherous nature of the storyteller's journey. Abstract shapes and swirls suggest the movement of water, with occasional glimpses of hidden depths below. The card's border is adorned with aquatic motifs and faint, luminescent runes, suggesting a connection to ancient maritime lore. This texture brings to life the eerie, contemplative moments beside the water, under a moonlit sky.",
+    "font": "Alegreya",
+    "card_material": "Ivory",
+    "major_cultural_influences_references": ["Call of Cthulhu RPG", "The Shadow Over Innsmouth", "Pirates of the Caribbean", "Hokusai"]
+  }, {
+    "prompt": "Craft a texture evoking a mystical forest scene, where the boundary between the natural and the supernatural blurs. The base is a rich tapestry of deep forest greens and earthy browns, overlaid with patterns that mimic the intricate weave of tree roots and branches. Embedded within the texture are symbols and icons that speak of ancient druidic rituals and the enduring spirits of the forest. The card's edges are detailed with leafy embellishments and fine, thorn-like flourishes, framing the design in a celebration of the wild, untamed aspects of nature. This texture invites the holder into a world where magic infuses every leaf and stone, a key to untold adventures.",
+    "font": "Tangerine",
+    "card_material": "Wood",
+    "major_cultural_influences_references": ["The Elder Scrolls", "The Mists of Avalon", "Princess Mononoke", "John William Waterhouse"]
+  }]
+  
+  const textures = await Promise.all(textureJsons.map(async (textureJson, index) => {
     // Create a subfolder for the texture
     // {textureName: Str, DecorativeStyle:Str, description:String, font:String, artisticInfluences:[KeyWords], genre:Str. }
-    texturePrompt.prompt =  `"RPG collector card texture prompt. SEAMLESS. FULL FRAME:"${texturePrompt.prompt} "". can you please take this above prompt. and try to make it more of a card texture. with edges embellishments. the result should feel as an infusion. something suitable for RPG. FULL FRAME ONLY!!`
+    textureJson.category = getRandomCategory()
+    textureJson.prompt = textureJSONToPrompt(textureJson)
+    textureJson.prompt =  `"RPG collector card texture prompt category ${textureJson.category}: SEAMLESS. FULL FRAME:"${textureJson.prompt} "!!`
     
     const subfolderPath = path.join(__dirname, '../../assets', `${sessionId}/textures/${Math.floor(Math.random() * 1000)}`);
     if (!fs.existsSync(subfolderPath)){
       fs.mkdirSync(subfolderPath, { recursive: true });
     }
-    const url = await textToImageOpenAi(`${texturePrompt.prompt}. Seamless texture. Full Frame design. thick feel for the texture. real material: raw, grainy, cinematic, handheld, film quality, rough, ragged, time worn. inspiring. immersive. exciting. natural light. think of proper embellishments, flourishes. .unbroken. full frame design. surprising idiosyncertic backsdie a unique tarot deck.  think of a real material this card can be made upon. wood, clay, parchment, metal, stone etc..all worn by time and usage`, 1, `${subfolderPath}/${index}.png`, shouldMockImage);
+    // const url = await textToImageOpenAi(`${textureJson.prompt}. Seamless texture. Full Frame design. thick feel for the texture. real material: raw, grainy, cinematic, handheld, film quality, rough, rugged, time worn. inspiring. immersive. exciting. natural light. think of proper embellishments, flourishes. .unbroken. full frame design. surprising idiosyncertic backsdie a unique tarot deck. evidently used ..arcane, magical`, 1, `${subfolderPath}/${index}.png`, shouldMockImage);
+    const url = await textToImageOpenAi(`${textureJson.prompt}. Seamless texture. Full Frame design. thick feel for the texture. inspiring. immersive. exciting. magical. think of proper embellishments, flourishes. .unbroken. full frame design. surprising idiosyncertic backsdie a unique tarot deck. evidently used ..arcane, magical`, 1, `${subfolderPath}/${index}.png`, shouldMockImage);
     // const url = await textToImageOpenAi(`CREATE AN RPG COLLECTOR CARD TEXTURE OUT OF THIS GUIDELINE JSON:${JSON.stringify(texturePrompt)}`, 1, `${subfolderPath}/${index}.png`, shouldMockImage);
     
-    return {url, font: texturePrompt.font, prompt:texturePrompt.prompt, index}
+    return {url, textureJson, index}
   }));
   await saveTextures(sessionId, textures)
   

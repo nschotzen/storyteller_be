@@ -1,7 +1,19 @@
 const { OpenAI } = require('openai');
 
 
+const OPENAI_API_KEYS = [
+    "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"
+];
 
+const OPENAI_API_KEYS_FREE = [
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+    "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",
+];
 const KEYS_TYPE = {
     BALANCE: "BALANCE",
     FREE: "FREE",
@@ -471,18 +483,18 @@ as backside for a virtual RPG deck of card.`
             "Create a seamless, FULL FRAME, UNBROKEN inspiring, immersive texture for an RPG card, influenced by the dark fantasy world akin to 'Dark Souls'. The texture should portray a story of endurance and redemption in a mystical, challenging environment. Utilize a color scheme of mossy greens and shadowy greys, interwoven with an ethereal glow symbolizing hope in a realm of despair. Incorporate Shibori dye patterns to add an enigmatic, auroral effect, reminiscent of the mysterious and otherworldly landscapes typical of dark fantasy worlds. Enhance the RPG essence with subtle motifs and symbols reflective of the genre's themes, such as ancient runes or mythical creatures. Frame the design with delicate, card-like embellishments or flourishes that seamlessly integrate with the overall texture. These elements should be inspired by the artistic diversity found in dark fantasy RPG core books and ArtStation, capturing the rich, varied essence of this RPG genre. The texture should avoid any textual elements, embodying the depth and mystical infusion of a dark fantasy RPG world with a focus on blending digital artistry and traditional texture techniques."
             IMPORTANT: THE OUTPUT SHOULD BE A JSON list of objects: [{prompt:String, font:string}] no additional strings. so it won't be broken JSON.parse!!!! '
     
-    also choose real material this card texture is made on in the physical universe of this narrative. example for materials:
+            also choose real material this card texture is made on in the physical universe of this narrative. example for materials:
     
     
-    A Weathered card shaped Metal Texture: Create a texture that simulates corroded and tarnished metal, perhaps from ancient armor or relics found in this universe. The metal should have a patina that suggests great age, with embossed designs that are now barely discernible. FULL FRAME. grainy, natural light. cinematic
-    
-    Frayed mysterious Card shaped Fabric Texture: Imagine a texture that replicates a piece of frayed fabric, possibly from a banner or garment that has seen better days. The fabric's pattern should be faded and tattered, yet still hinting at the grandeur it once held.
-    
-    Each texture should be paired with an appropriate Google font that complements its historical and material qualities, enhancing the overall aesthetic. The textures should maintain an abstract quality to fit various card categories while conveying the wear and tear of time, bringing the players closer to the universe's ancient and mystical atmosphere.
-    
-    The design elements should include subtle embellishments, motifs, and flourishes, avoiding direct references to specific Earth cultures. The goal is to create a series of textures that are unique to this RPG universe, blending abstract artistry with the tangible feel of different aged materials.
-    
-    Output as JSON objects: [{prompt:String, font:string},{prompt:String, font:string},{prompt:String, font:string},{prompt:String, font:string}].". remember that each item in the list is standalone and will be used on a fresh new instance of dalle-3 without any history or knowledge of the original fragment or other textures.
+            A Weathered card shaped Metal Texture: Create a texture that simulates corroded and tarnished metal, perhaps from ancient armor or relics found in this universe. The metal should have a patina that suggests great age, with embossed designs that are now barely discernible. FULL FRAME. grainy, natural light. cinematic
+            
+            Frayed mysterious Card shaped Fabric Texture: Imagine a texture that replicates a piece of frayed fabric, possibly from a banner or garment that has seen better days. The fabric's pattern should be faded and tattered, yet still hinting at the grandeur it once held.
+            
+            Each texture should be paired with an appropriate Google font that complements its historical and material qualities, enhancing the overall aesthetic. The textures should maintain an abstract quality to fit various card categories while conveying the wear and tear of time, bringing the players closer to the universe's ancient and mystical atmosphere.
+            
+            The design elements should include subtle embellishments, motifs, and flourishes, avoiding direct references to specific Earth cultures. The goal is to create a series of textures that are unique to this RPG universe, blending abstract artistry with the tangible feel of different aged materials.but it's important that they would convey a card like feel and would have a very unique inspiriation for storytelling. will have a storytelling theme to them. it's the theme of the story...there should be at least one concrete element that stands out looking at this card. Also, please emphasize the card like quality of the illustration. the material should make sense as a magical card. make sure to include flourishes and embellishments at the edges to further enhance their card-like quality. MAKE SURE YOU ARE  inspired by niche fantasy novels, RPG games, and movies. make a fusion! mention them in this texture theme creation!
+            
+            Output as JSON objects: [{prompt:String, font:string, card_material:Str, major_cultural_influences_references:[niche rpg system , fantasy/sci fi novel, movie name, artist name]},{prompt:String, font:string, card_material:Str, major_cultural_influences_references:[niche rpg system , fantasy/sci fi novel, movie name, artist name]},{prompt:String, font:string, card_material:Str, major_cultural_influences_references:[niche rpg system , fantasy/sci fi novel, movie name, artist name]},{prompt:String, font:string, card_material:Str,major_cultural_influences_references:[niche rpg system , fantasy/sci fi novel, movie name, artist name]}].". remember that each item in the list is standalone and will be used on a fresh new instance of dalle-3 without any history or knowledge of the original fragment or other textures.
     `
     return [{ role: "system", content: prompt }];
 }
@@ -1019,8 +1031,9 @@ function generateBookDeteriorationProcessJsonPrompt(texture){
     [{ role: "system", content: prompt }]
 }
 
-function generateStorytellerDetectiveFirstParagraphSession(){
-    // ***** Return format{
+function generateStorytellerDetectiveFirstParagraphSession(scene){
+    // ***** Return format
+    // {
     //   "current_narrative": "It was almost",
     //   "choices": {
     //     "choice_1": {
@@ -1050,12 +1063,12 @@ function generateStorytellerDetectiveFirstParagraphSession(){
     //   }
     // }
 
-    const prompt =`this is the story of the storyteller detective. as he gets into a foreign realm, which is at the last stages of deterioration and becoming totally lost and forgotten. The Storyteller detective is almost at the location of the resing place of the last book telling the tales of this once great storytelling universe. he's almost at the location . we acoompany the storyteller detective in the last scene of the journey of finding this going to be forever lost book and storytelling realm.
-    we will focus on this last process of  the storyteller detective's journey . 
+    const prompt =`this is the story of the storyteller detective. as he gets into a foreign realm, which is at the last stages of deterioration and becoming totally lost and forgotten. The Storyteller detective is almost at the location of the resing place of the last book telling the tales of this once great storytelling universe. he's almost at the location . we acoompany the storyteller detective in the last scene of the journey of finding this going to be forever lost and forgotten book and storytelling realm.
+    we will focus on this last step of  the storyteller detective's journey . 
     it's going to be a sequence of narrative description woven with a series of options of continuations by the user (who is the storyteller himself, of this decaying soon to be forgotten storytelling  realm ) 
     by presenting the options the narrative continues of the description how storytelling detective finds this specific book in a specific place. it's going to be in a specific stage of deterioration. 
     let's look at an example:
-    {"current_narrative":"it was almost", "choices":{ choice_1: {options: [{"continuation":"night", "storytelling_points":1}, {"continuation":"noon", "storytelling_points":1},{"continuation":"midnight", "storytelling_points":2}, {"continuation":"at the summit", "storytelling_points":3},{"continuation":"as if the river was shining in gold", "storytelling_points":4, "continuation":"two months since first embarking on this journey", "storytelling_points":5}]}. the user(who is the storyteller himself of this soon to be forgotten storytelling world), needs to choose an option. (and to pay the necessasry storytelling points out of a bank of 30 storytelling points)
+    {"current_narrative":"And so it became to be that it was almost", "choices":{ choice_1: {options: [{"continuation":"night", "storytelling_points":1}, {"continuation":"noon", "storytelling_points":1},{"continuation":"midnight", "storytelling_points":2}, {"continuation":"at the summit", "storytelling_points":3},{"continuation":"as if the river was shining in gold", "storytelling_points":4, "continuation":"two months since first embarking on this journey", "storytelling_points":5}]}. the user(who is the storyteller himself of this soon to be forgotten storytelling world), needs to choose an option. (and to pay the necessasry storytelling points out of a bank of 30 storytelling points)
     according to the storyteller's choice the story continues. like
     for example if in here the storyteller chose noon:
     "it was almost <noon> as the storyteller detective finally reached " choices:  {options: [{"continuation":"the summit", "storytelling_points":1}, {"continuation":"the gates of this once sturdy fortress", "storytelling_points":3},{"continuation":"the ancient oak plateau", "storytelling_points":4}, {"continuation":"the observatory on the high messa", "storytelling_points":5},{"continuation":"the bank of the yuradel river", "storytelling_points":3}].
@@ -1078,19 +1091,60 @@ function generateStorytellerDetectiveFirstParagraphSession(){
     
     Balance Detail with Brevity: While details are important for immersion, options should be concise enough to maintain the flow and pace of the story.
     
-    try to follow this basic script template for a narrative: each gap represents a place to stop and give options:
-    It was almost ___ (1. time of day, e.g., night/dark/noon) as the storyteller detective finally approached what seemed to be like ___ (2. object/phenomenon/structure) surfacing(or more adequate verb) ___ (3. preposition indicating position or movement) the ___ (4. specific element in the location). On a closer look, it appeared to be ___ (5. initial impression of the object/phenomenon/structure), it was a ___ (6. specific object) made of ____(7. material/materials physicality), ___ (8. more elaborate description of the object). "Such a ___ (9. adjective describing the object) thing in the ___ (10. specific part of the location) of ___ (11. broader location or context)" ___(verb indicating the way the storyteller detective said it) the storyteller detective
-    as ___ (12. pronoun: he/she/they (determines gender))  ___ (13. verb indicating dismounting or stopping their mode of transportation), ___ (pronoun based on previously chosen gender (12)- so it should be known ) ___ (14. action of securing the mode of transportation and a short description of the mode of transportation). Then, taking ___ (object/s from a storage item, e.g., backpack), ___ (pronoun) proceeded to ___ (action indicating moving deeper into the location, looking for a specific place where that item/items from the storage should be used).__further examination of the surroundings in more detail. "Now where that ____(specific description of the purpose or nature of the final resting place of the book is, and how it's entered) may be?"
+    try to follow this basic script template for a narrative: each gap represents a place to stop and give options. first read the whole script as a whole and only then make the choices for the stage you're in.:
+    "${scene}"
     that concludes the scene.
     
     can you please try and do it? let ME be the user and you will start this and present me choices in this JSON format I demonstrated. return ONLY JSON. 
-    let ME choose...and then accordingly continue the narrative of the storytelling detective in the final stage of the journey of finding this book containing the book written by the storyteller himself/herself about this decaying and soon to be lost and forgotten storytelling universe. remain concrete and grounded. start the story from:"it was almost". use my examples. they're good. using few words is always a good option.
+    let ME choose...and then accordingly continue the narrative of the storytelling detective in the final stage of the journey of finding this book containing the book written by the storyteller himself/herself about this decaying and soon to be lost and forgotten storytelling universe. remain concrete and grounded. 
+    start the story from:"And so, it became to be that it was almost". use my examples. they're good. using few words is always a good option.
     keep the choices concrete, devoid of metaphors, grounded. factual, as if they're real locations. continue the story according to the script here. the story should continue seamlessly.
-    please give choices that are concrete, slowly unfold the narrative, and make sense in terms of geography, narrative, and all otherwise aspects. remain concrete, factual, grounded, wry as much as possible, and specific. not generic and dont' use adjectives that say nothing. SHOW DON'T TELL!!! let it unfold naturally, as a story would slowly unfold. STOP after each JSON output. and let me choose one option. BE CONCRETE. TANGIBLE. I want the scene to unfold and to feel it vividly, it should be coherent, flowing and intruiging. the storyteller detective reaches a place in the realm. the realm isn't about storytelling. the continuations should make sense and fit seamlessly and integrally...I want it as if it was written by ursula le guinn. be specific!! carefully continue after each choice made to the next gap. writing the narrative already chosen till now (as part of the json object). reflect the style fusion of ursula le guin , Diana gabaldon, Margaret Atwood Ernst Hemingway
+    please give choices that are concrete, slowly unfold the narrative,
+     and make sense in terms of geography, narrative, and all otherwise aspects. 
+     remain concrete, factual, grounded, wry as much as possible, and specific. 
+     not generic and DON'T EVERRRR' use adjectives that say nothing. 
+     SHOW DON'T TELL!!! let it unfold naturally, as a story would slowly unfold. 
+     STOP after each JSON output. and let me choose one option. 
+     BE CONCRETE. TANGIBLE. I want the scene to unfold and to feel it vividly, 
+     it should be coherent, flowing and intruiging. 
+     the storyteller detective reaches a place in the realm. the realm isn't about storytelling. 
+     the continuations should make sense and fit seamlessly and integrally...I want it as if it was written by ursula le guinn. 
+     be specific!! carefully continue after each choice made to the next gap. writing the narrative already chosen till now (as part of the json object). 
+     reflect the style fusion of ursula le guin , Diana gabaldon, Margaret Atwood Ernst Hemingway
+     AND REMEMBER THIS ADVISE: "To create smoother transitions or more polished prose within this interactive format, 
+     the key would be to craft each option and its integration into the narrative with attention to linguistic flow and natural language use, 
+     while still daring to be boldly specific even within the constraints of providing distinct, 
+     concrete choices for the storyteller. This involves a careful balance of creativity, 
+     narrative direction, and the grammatical structuring of sentences 
+     to ensure they not only fit the story's logic and progression 
+     but also read smoothly and engagingly"
     
     
     `
     return [{ role: "system", content: prompt }]
+}
+
+
+function generateStorytellerDetectiveFirstParagraphLetter(completeNarrative, scene){
+    const prompt = `COMPLETE_NARRATIVE:"${completeNarrative}",
+
+    (Disclaimer:I address here to the storyteller detective as a she, but the storyteller detective might be a he/they as was chosen before)
+    WHAT NOT: now, before the storyteller detective is going downstairs, she is taking out her journal. she's picking specifically 3 pages of that journal, and tears them out of the journal, and folding them neatly. then she  sets off to write the last entry of her journal. she writes hastily for about 4 precious minutes. in the last rays of dusk. it seems she's also making a drawing. after she finishes she  takes the tears off that last entry too, puts the journal back but takes all 4 pages now, put them in an envelope, and puts it in her mode of transportation, and setting the mode of transportation off.... this is the scene i'm trying to make. 
+    
+    JOURNAL_WRITING: in this process of writing, the storyteller detective is going to address to "the storyteller" as the one who is responsible for this mess that this world is in, this realm of storytelling. and the real danger of it being forgotten. in fact this is the last chance. as she's found the last book written by the storyteller, but she's not sure as to its condition. but she'll send a picture. she then tells the storyteller the location of where they're going to meet. and it is very surprisingly a place on earth, that would make sense to be a location for a film, or maybe a location which the scene  
+    
+    I want you to guide the process of creating that script following this  script template, though you may vary as long as you're seeing the scene as a whole, and guide it through: 
+    
+    BASIC_SCRIPT_TEMPLATE: each gap represents a place to stop and give options. first read the whole script, and remember the overall scene depicted as a whole and only then make the choices for the stage you're in.:
+    Journal Entry script template:(the narrative is both direct writing of the storyteller detective, but also some narration, I consider them all as "the narrative". direct journal writing wil be marked by "". the journal is written by hand)
+    ${scene}
+    
+    ADDITIONALLY: please follow the same json format as before: {""current_narrative"":"I finally found it", "choices:  {options: [{"continuation":"the summit", "storytelling_points":1}, {"continuation":"the gates of this once sturdy fortress", "storytelling_points":3},{"continuation":"the ancient oak plateau", "storytelling_points":4}, {"continuation":"the observatory on the high messa", "storytelling_points":5},{"continuation":"the bank of the yuradel river", "storytelling_points":3}].}"
+    please give choice 1. wait for my choice. write the narrative so far.. starting with "I finally found it"... . along with the current_narrative and based on it give choice 2...etc..
+    REMEMBER, the COMPLETE_NARRATIVE given in the beginning of this prompt, is the source and reference to the place that was found, where the last book of the realm resides.`
+
+    return [{ role: "system", content: prompt }]
+
 }
 
 
@@ -1108,7 +1162,7 @@ async function directExternalApiCall(prompts, max_tokens = 2500, temperature=1, 
             }
             if(explicitJsonObjectFormat)
                 req_obj['response_format'] = {"type" : "json_object"}
-            const completion = await getOpenaiClient().chat.completions.create();
+            const completion = await getOpenaiClient().chat.completions.create(req_obj);
 
         
         
@@ -1158,6 +1212,7 @@ module.exports = {
     characterCreationInitialOptionsPrompt,
     generateStorytellerSummaryPropt,
     generateBookDeteriorationProcessJsonPrompt,
-    generateStorytellerDetectiveFirstParagraphSession
+    generateStorytellerDetectiveFirstParagraphSession,
+    generateStorytellerDetectiveFirstParagraphLetter
 };
 
