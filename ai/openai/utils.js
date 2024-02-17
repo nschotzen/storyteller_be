@@ -1,19 +1,7 @@
 const { OpenAI } = require('openai');
 
 
-const OPENAI_API_KEYS = [
-    "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"
-];
 
-const OPENAI_API_KEYS_FREE = [
-    "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",
-    "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",
-    "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",
-    "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",
-    "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",
-    "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",
-    "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",
-];
 const KEYS_TYPE = {
     BALANCE: "BALANCE",
     FREE: "FREE",
@@ -26,9 +14,9 @@ const openAIConfig = {
 };
 
 function chooseApiKey() {
-    const idx = Math.floor(Math.random() * OPENAI_API_KEYS.length);
+    const idx = Math.floor(Math.random() * BOO.length);
     console.log("chose key ", idx);
-    return OPENAI_API_KEYS[idx];
+    return BOO[idx];
 }
 
 function getOpenaiClient() {
